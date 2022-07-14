@@ -137,33 +137,20 @@
                 </div>
                 <hr>
                 <div class="custom-control custom-switch">
-                    <input type="checkbox" class="custom-control-input" name="switch-basemap" id="20_RGB_Campania_20200706">
-                    <label class="custom-control-label" for="20_RGB_Campania_20200706">RGB 6 luglio 2020</label>
+                    <input type="checkbox" class="custom-control-input" name="switch-basemap" id="wmsTCI20170806">
+                    <label class="custom-control-label" for="wmsTCI20170806">RGB 6 agosto 2017</label>
                 </div>
                 <div class="custom-control custom-switch">
-                    <input type="checkbox" class="custom-control-input" name="switch-basemap" id="19_RGB_Campania_20190702">
-                    <label class="custom-control-label" for="19_RGB_Campania_20190702">RGB 2 luglio 2019</label>
+                    <input type="checkbox" class="custom-control-input" name="switch-basemap" id="wmsSWIR20170712">
+                    <label class="custom-control-label" for="wmsSWIR20170712">SWIR 12 luglio 2017</label>
                 </div>
                 <div class="custom-control custom-switch">
-                    <input type="checkbox" class="custom-control-input" name="switch-basemap" id="18_RGB_Campania_20180702">
-                    <label class="custom-control-label" for="18_RGB_Campania_20180702">RGB 2 luglio 2018</label>
+                    <input type="checkbox" class="custom-control-input" name="switch-basemap" id="wmsTCI20170712">
+                    <label class="custom-control-label" for="wmsTCI20170712">RGB 12 luglio 2017</label>
                 </div>
                 <div class="custom-control custom-switch">
-                    <input type="checkbox" class="custom-control-input" name="switch-basemap" id="15_RGB_Campania_20170712">
-                    <label class="custom-control-label" for="15_RGB_Campania_20170712">RGB 12 luglio 2017</label>
-                </div>
-
-                <div class="custom-control custom-switch">
-                    <input type="checkbox" class="custom-control-input" name="switch-basemap" id="14_wildfires_20170712">
-                    <label class="custom-control-label" for="14_wildfires_20170712">SWIR 12 luglio 2017</label>
-                </div>
-                <div class="custom-control custom-switch">
-                    <input type="checkbox" class="custom-control-input" name="switch-basemap" id="13_RGB_Campania_20160712">
-                    <label class="custom-control-label" for="13_RGB_Campania_20160712">RGB 12 luglio 2016</label>
-                </div>
-                <div class="custom-control custom-switch">
-                    <input type="checkbox" class="custom-control-input" name="switch-basemap" id="12_RGB_Campania_20150807">
-                    <label class="custom-control-label" for="12_RGB_Campania_20150807">RGB 7 agosto 2015</label>
+                    <input type="checkbox" class="custom-control-input" name="switch-basemap" id="wmsTCI20160712">
+                    <label class="custom-control-label" for="wmsTCI20160712">RGB 12 luglio 2016</label>
                 </div>
             </div>
         </div>
@@ -313,6 +300,95 @@
         }
     });
 
+    var wmsSource = 'https://geoserver.massimilianomoraca.me/geoserver/MassimilianoMoraca/wms'
+    var wmsTCI20170806 = new ol.layer.Tile({
+        title: 'TCI 6 agosto 2017',
+        source: new ol.source.TileWMS({
+        url: wmsSource,
+        params: {
+            'LAYERS': 'RGB_Campania_20170806',
+            'STYLES': null,
+        }
+        }),
+        minZoom: 0,
+        maxZoom: 28,
+        zIndex: 1,
+        opacity: 1.00
+    });
+    $('#wmsTCI20170806').on('change', function() {
+        let isChecked = $(this).is(':checked');
+        if (isChecked) {
+            map.addLayer(wmsTCI20170806);
+        } else {
+            map.removeLayer(wmsTCI20170806);
+        }
+    });
+    var wmsSWIR20170712 = new ol.layer.Tile({
+        title: 'TCI 6 agosto 2017',
+        source: new ol.source.TileWMS({
+        url: wmsSource,
+        params: {
+            'LAYERS': 'RGB_B12_Campania_20170712',
+            'STYLES': null,
+        }
+        }),
+        minZoom: 0,
+        maxZoom: 28,
+        zIndex: 1,
+        opacity: 1.00
+    });
+    $('#wmsSWIR20170712').on('change', function() {
+        let isChecked = $(this).is(':checked');
+        if (isChecked) {
+            map.addLayer(wmsSWIR20170712);
+        } else {
+            map.removeLayer(wmsSWIR20170712);
+        }
+    });
+    var wmsTCI20170712 = new ol.layer.Tile({
+        title: 'TCI 6 agosto 2017',
+        source: new ol.source.TileWMS({
+        url: wmsSource,
+        params: {
+            'LAYERS': 'RGB_Campania_20170712',
+            'STYLES': null,
+        }
+        }),
+        minZoom: 0,
+        maxZoom: 28,
+        zIndex: 1,
+        opacity: 1.00
+    });
+    $('#wmsTCI20170712').on('change', function() {
+        let isChecked = $(this).is(':checked');
+        if (isChecked) {
+            map.addLayer(wmsTCI20170712);
+        } else {
+            map.removeLayer(wmsTCI20170712);
+        }
+    });
+    var wmsTCI20160712 = new ol.layer.Tile({
+        title: 'TCI 6 agosto 2017',
+        source: new ol.source.TileWMS({
+        url: wmsSource,
+        params: {
+            'LAYERS': 'RGB_Campania_20160712',
+            'STYLES': null,
+        }
+        }),
+        minZoom: 0,
+        maxZoom: 28,
+        zIndex: 1,
+        opacity: 1.00
+    });
+    $('#wmsTCI20160712').on('change', function() {
+        let isChecked = $(this).is(':checked');
+        if (isChecked) {
+            map.addLayer(wmsTCI20160712);
+        } else {
+            map.removeLayer(wmsTCI20160712);
+        }
+    });
 
 </script>
 

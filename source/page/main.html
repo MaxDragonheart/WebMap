@@ -4,7 +4,7 @@
 <!DOCTYPE html>
 <html lang="it" dir="ltr">
   <head>
-    
+
 
 <!-- Global site tag (gtag.js) - Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-656GGPQ9FS"></script>
@@ -44,7 +44,7 @@
     <meta name="twitter:description" content="A metà luglio 2017 un vasto incendio ha distrutto il patrimonio boschivo del Parco Nazionale del Vesuvio. Questa mappa consente di vedere i danni a distanza di anni." />
     <meta name="twitter:image" content="http://massimilianomoraca.it/media/uploads/images/2021/08/01/incendio_vesuvio_2017.jpg" />
 
-    
+
 <!-- JQuery -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"
   integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
@@ -72,7 +72,7 @@
 <link rel="stylesheet"
   href="/static/css/commons.css">
 
-    
+
 <!-- CUSTOM FOR MAPS -->
     <link rel="stylesheet" href="/static/css/ol_custom.css">
     <link rel="stylesheet" href="/static/css/geomedia.css">
@@ -88,7 +88,7 @@
     <script src="https://cdn.plot.ly/plotly-2.11.1.min.js"></script>
 
 
-    
+
   </head>
   <body>
 
@@ -111,8 +111,8 @@
             </span>
           </button>
           <div class="offcanvas offcanvas-end" tabindex="-1" id="mapDescription" aria-labelledby="mapDescriptionLabel">
-            
-    
+
+
 
 <div class="offcanvas-header">
   <h5 class="offcanvas-title" id="mapDescriptionLabel">Incendio del Vesuvio, estate 2017</h5>
@@ -166,49 +166,49 @@
                   <input type="radio" class="custom-control-input" name="switch-basemap" id="BASEMAP_SATELLITE">
                   <label class="custom-control-label" for="BASEMAP_SATELLITE">Satellite</label>
                 </div>
-                
-                <hr>
-                
-    
 
-  
-  
+                <hr>
+
+
+
+
+
     <div class="custom-control custom-switch">
       <input type="checkbox" class="custom-control-input" name="switch-basemap" id="20_RGB_Campania_20200706">
       <label class="custom-control-label" for="20_RGB_Campania_20200706">RGB 6 luglio 2020</label>
     </div>
-  
+
     <div class="custom-control custom-switch">
       <input type="checkbox" class="custom-control-input" name="switch-basemap" id="19_RGB_Campania_20190702">
       <label class="custom-control-label" for="19_RGB_Campania_20190702">RGB 2 luglio 2019</label>
     </div>
-  
+
     <div class="custom-control custom-switch">
       <input type="checkbox" class="custom-control-input" name="switch-basemap" id="18_RGB_Campania_20180702">
       <label class="custom-control-label" for="18_RGB_Campania_20180702">RGB 2 luglio 2018</label>
     </div>
-  
+
     <div class="custom-control custom-switch">
       <input type="checkbox" class="custom-control-input" name="switch-basemap" id="15_RGB_Campania_20170712">
       <label class="custom-control-label" for="15_RGB_Campania_20170712">RGB 12 luglio 2017</label>
     </div>
-  
+
     <div class="custom-control custom-switch">
       <input type="checkbox" class="custom-control-input" name="switch-basemap" id="14_wildfires_20170712">
       <label class="custom-control-label" for="14_wildfires_20170712">SWIR 12 luglio 2017</label>
     </div>
-  
+
     <div class="custom-control custom-switch">
       <input type="checkbox" class="custom-control-input" name="switch-basemap" id="13_RGB_Campania_20160712">
       <label class="custom-control-label" for="13_RGB_Campania_20160712">RGB 12 luglio 2016</label>
     </div>
-  
+
     <div class="custom-control custom-switch">
       <input type="checkbox" class="custom-control-input" name="switch-basemap" id="12_RGB_Campania_20150807">
       <label class="custom-control-label" for="12_RGB_Campania_20150807">RGB 7 agosto 2015</label>
     </div>
-  
-  
+
+
 
 
 
@@ -219,10 +219,10 @@
 
       </div>
 
-      
-    
 
-  
+
+
+
   <div class="map-calculus">
 
       <button class="btn btn-map" type="button" data-bs-toggle="offcanvas" data-bs-target="#mapCalculus" aria-controls="mapCalculus">
@@ -257,15 +257,15 @@
     <a href="#" id="popup-closer" class="ol-popup-closer"></a>
     <div id="popup-content"></div>
   </div>
-  
 
 
 
 
-      
-    
 
-  
+
+
+
+
 
 
 
@@ -391,6 +391,12 @@ map.setView(view);
           map.removeLayer(satellite);
         }
       });
+
+
+
+
+
+
 
 
 
