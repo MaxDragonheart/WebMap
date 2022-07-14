@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="title" content="Incendio del Vesuvio, estate 2017">
+    <meta name="description" content="A metà luglio 2017 un vasto incendio ha distrutto il patrimonio boschivo del Parco Nazionale del Vesuvio. Questa mappa consente di vedere i danni a distanza di anni." />
+    <meta name="keywords" content="gis consulenza tutorial formazione">
+    <meta name="author" content="Massimiliano Moraca">
+    <meta http-equiv="Reply-to" content="info@massimilianomoraca.it">
+    <meta http-equiv="content-language" content="IT">
+    <meta http-equiv="Content-Type" content="text/html; iso-8859-1">
+    <meta name="robots" content="INDEX,FOLLOW">
+    <meta name="creation_Date" content="14 Luglio 2022">
+    <meta name="revisit-after" content="7 days">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <title>Incendio del Vesuvio, estate 2017</title>
+    <link rel="icon" href="https://massimilianomoraca.it/static/images/logo.png" type="image/gif">
+
+    <!-- OpenGraph -->
+    <meta property="og:title" content="Incendio del Vesuvio, estate 2017">
+    <meta name="description" property="og:description" content="A metà luglio 2017 un vasto incendio ha distrutto il patrimonio boschivo del Parco Nazionale del Vesuvio. Questa mappa consente di vedere i danni a distanza di anni.">
+    <meta property="og:type" content="article" >
+    <meta property="og:image" content="https://massimilianomoraca.it/media/uploads/images/2021/08/01/incendio_vesuvio_2017.jpg">
+    <meta property="og:url" content="webmap.massimilianomoraca.me">
+    <meta name="twitter:creator" content="@maxdragonheart" />
+    <meta name="twitter:card" value="summary_large_image">
+    <meta name="twitter:title" content="Incendio del Vesuvio, estate 2017">
+    <meta name="twitter:description" content="A metà luglio 2017 un vasto incendio ha distrutto il patrimonio boschivo del Parco Nazionale del Vesuvio. Questa mappa consente di vedere i danni a distanza di anni." />
+    <meta name="twitter:image" content="https://massimilianomoraca.it/media/uploads/images/2021/08/01/incendio_vesuvio_2017.jpg" />
+
+<!-- JQuery -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"
+  integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
+  crossorigin="anonymous"></script>
+<!-- Bootstrap -->
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"
+  integrity="sha384-7+zCNj/IqJ95wo16oMtfsKbZ9ccEh31eOz1HGyDuCQ6wgnyJNSYdrPa03rtR1zdB"
+  crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js"
+  integrity="sha384-QJHtvGhmr9XOIpI6YVutG+2QOK9T+ZnN4kzFN1RtK3zEFEIsxhlmWl5/YESvpZ13"
+  crossorigin="anonymous"></script>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
+  rel="stylesheet"
+  integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3"
+  crossorigin="anonymous">
+<!-- Font Awesome -->
+<link rel="stylesheet"
+  href="https://use.fontawesome.com/releases/v5.8.1/css/all.css"
+  integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf"
+  crossorigin="anonymous">
+<script defer src="https://use.fontawesome.com/releases/v5.8.1/js/all.js"
+  integrity="sha384-g5uSoOSBd7KkhAMlnQILrecXvzst9TdC09/VM+pjDTCM+1il8RHz5fKANTFFb+gQ"
+  crossorigin="anonymous"></script>
+<!-- OpenLayers 6 -->
+<script src="https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@master/en/v6.14.1/build/ol.js"></script>
+<link rel="stylesheet"
+      href="https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@master/en/v6.14.1/css/ol.css">
+<!-- ol-ext -->
+<link rel="stylesheet" href="https://cdn.rawgit.com/Viglino/ol-ext/master/dist/ol-ext.min.css" />
+<script type="text/javascript" src="https://cdn.rawgit.com/Viglino/ol-ext/master/dist/ol-ext.min.js"></script>
+<!-- Plotly JS -->
+<script src="https://cdn.plot.ly/plotly-2.11.1.min.js"></script>
+<!-- Custom -->
+<link rel="stylesheet" href="../../../assets/css/ol_custom.css">
+<link rel="stylesheet" href="../../../assets/css/geomedia.css">
+<script src="../../../assets/js/geomedia.js" type="text/javascript"></script>
+
+
+</head>
+<body>
+
+<div class="map-wrapper">
+
+    <div class="map" id='map'></div>
+
+    <div class="turn-back-map">
+        <a class="btn btn-map" href="#">
+            <span data-toggle="tooltip" data-placement="top" title="Torna indietro">
+                <i class="fas fa-undo-alt"></i>
+            </span>
+        </a>
+    </div>
+
+    <div class="map-info">
+        <button class="btn btn-map" type="button" data-bs-toggle="offcanvas" data-bs-target="#mapDescription" aria-controls="mapDescription">
+            <span data-toggle="tooltip" data-placement="top" title="Descrizione">
+                <i class="fas fa-book"></i>
+            </span>
+        </button>
+        <div class="offcanvas offcanvas-end" tabindex="-1" id="mapDescription" aria-labelledby="mapDescriptionLabel">
+        <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="mapDescriptionLabel">Incendio del Vesuvio, estate 2017</h5>
+            <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body">
+            <article class="text-justify">
+                <p>Questa mappa, <strong>non ottimizzata per tablet e smartphone ma liberamente gestibile da pc</strong>, sfrutta i dati del progetto <a href="https://sentinel.esa.int/web/sentinel/missions/sentinel-2" target="_blank" rel="noopener">Copernicus Sentinel-2</a> per dare una lettura di parte del territorio campano a partire dal 2015.</p>
+                <p>Vengono usati in particolare i dati relativi ai periodi estivi, combinati per calcolare l'indice NDVI che viene mostrato nell'area del grafico ogni volta che si clicca su un punto della mappa.</p>
+                <p>Attivando e disattivando i layer satellitari &egrave; possibile inoltre visionare anche lo stato dei luoghi relativo al giorno censito. Per il solo 12 luglio 2017 viene riportato anche un layer da sensore infrarosso(SWIR - Short Wave Infra-Red); questo tipo di sensore consente di penetrare nuvole e fumo e grazie ad esso &egrave; possibile individuare i roghi presenti nel <a href="../../../../../blog/gis/analisi-dei-dati-copernicus-relativi-agli-incendi-sul-vesuvio-del-2017/" target="_blank" rel="noopener">Parco Nazionale del Vesuvio</a> ed in altre zone della Regione in quel giorno.</p>
+            </article>
+        </div>
+    </div>
+
+</div>
+
+<div class="btn-map-legend">
+    <button class="btn btn-map" type="button" data-bs-toggle="offcanvas" data-bs-target="#openMapControls" aria-controls="openMapControls">
+        <span data-toggle="tooltip" data-placement="top" title="Descrizione">
+            <i class="fas fa-layer-group"></i>
+        </span>
+    </button>
+    <div class="offcanvas offcanvas-end" tabindex="-1" id="openMapControls" aria-labelledby="openMapControlsLabel">
+        <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="openMapControlsLabel">Layers</h5>
+            <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body">
+            <div class="px-2">
+                <div class="custom-control custom-switch">
+                    <input type="radio" class="custom-control-input" name="switch-basemap" id="BASEMAP_OSM" checked>
+                    <label class="custom-control-label" for="BASEMAP_OSM">Lite</label>
+                </div>
+                <div class="custom-control custom-switch">
+                    <input type="radio" class="custom-control-input" name="switch-basemap" id="BASEMAP_OUTDOORS">
+                    <label class="custom-control-label" for="BASEMAP_OUTDOORS">Topographic</label>
+                </div>
+                <div class="custom-control custom-switch">
+                    <input type="radio" class="custom-control-input" name="switch-basemap" id="BASEMAP_MONOCROMEGRAY">
+                    <label class="custom-control-label" for="BASEMAP_MONOCROMEGRAY">Monocrome Gray</label>
+                </div>
+                <div class="custom-control custom-switch">
+                    <input type="radio" class="custom-control-input" name="switch-basemap" id="BASEMAP_SATELLITE">
+                    <label class="custom-control-label" for="BASEMAP_SATELLITE">Satellite</label>
+                </div>
+                <hr>
+                <div class="custom-control custom-switch">
+                    <input type="checkbox" class="custom-control-input" name="switch-basemap" id="wmsTCI20220711">
+                    <label class="custom-control-label" for="wmsTCI20220711">TCI 11 luglio 2022</label>
+                </div>
+                <div class="custom-control custom-switch">
+                    <input type="checkbox" class="custom-control-input" name="switch-basemap" id="wmsTCI20170806">
+                    <label class="custom-control-label" for="wmsTCI20170806">TCI 6 agosto 2017</label>
+                </div>
+                <div class="custom-control custom-switch">
+                    <input type="checkbox" class="custom-control-input" name="switch-basemap" id="wmsSWIR20170712">
+                    <label class="custom-control-label" for="wmsSWIR20170712">SWIR 12 luglio 2017</label>
+                </div>
+                <div class="custom-control custom-switch">
+                    <input type="checkbox" class="custom-control-input" name="switch-basemap" id="wmsTCI20170712">
+                    <label class="custom-control-label" for="wmsTCI20170712">TCI 12 luglio 2017</label>
+                </div>
+                <div class="custom-control custom-switch">
+                    <input type="checkbox" class="custom-control-input" name="switch-basemap" id="wmsTCI20160712">
+                    <label class="custom-control-label" for="wmsTCI20160712">TCI 12 luglio 2016</label>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="map-calculus">
+    <button class="btn btn-map" type="button" data-bs-toggle="offcanvas" data-bs-target="#mapCalculus" aria-controls="mapCalculus">
+        <span data-toggle="tooltip" data-placement="top" title="Analisi">
+            <i class="fas fa-cogs"></i>
+        </span>
+    </button>
+    <div class="offcanvas offcanvas-end" tabindex="-1" id="mapCalculus" aria-labelledby="mapCalculusLabel">
+        <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="mapCalculusLabel">Dati processati</h5>
+            <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body">
+            <article class="text-justify">
+                <p>In questa mappa ci sono dati processati. Spunta il box che segue per visualizzare le tabelle e/o i grafici presenti.</p>
+                <div class="custom-control custom-checkbox">
+                    <input type="checkbox" class="custom-control-input" id="ShowData">
+                    <label class="custom-control-label" for="ShowData">Visualizza</label>
+                </div>
+                <p class="bg-warning mt-1 px-2" id="gotoaction" style="display: none;">Chiudi questa finestra e clicca su un punto della mappa per visualizzare le tabelle e/o i grafici.</p>
+            </article>
+        </div>
+    </div>
+</div>
+
+<div class="card ol-popup" id="popup" style="display: none;">
+    <a href="#" id="popup-closer" class="ol-popup-closer"></a>
+    <div id="popup-content"></div>
+</div>
+
+</div>
+
+<script type="text/javascript">
+
+    var map = new ol.Map({
+        target: 'map',
+        controls: ol.control.defaults({
+            attribution: false
+        }),
+    });
+    var scaleLine = new ol.control.ScaleLine({
+        className: 'ol-scale-line',
+        target: document.getElementById('scale-line')
+    });
+    map.addControl(scaleLine);
+    var attribution = new ol.control.Attribution({
+        className: 'ol-attribution',
+        label: 'a',
+        collapsible: true,
+        collapsed: true,
+        target: document.getElementById('map-attribution'),
+    });
+    map.addControl(attribution);
+    var view = new ol.View({
+        center: ol.proj.fromLonLat([14.42637, 40.82115]),
+        zoom: 13,
+        maxZoom: 16,
+        minZoom: 10
+    });
+    map.setView(view);
+
+    var osm = new ol.layer.Tile({
+        source: new ol.source.OSM(),
+        zIndex: 0
+    });
+    map.addLayer(osm);
+    $('#BASEMAP_OSM').on('change', function() {
+        let isChecked = $(this).is(':checked');
+        if (isChecked) {
+            map.addLayer(osm);
+            map.removeLayer(outdoors);
+            map.removeLayer(monocromeGray);
+            map.removeLayer(satellite);
+        } else {
+            map.removeLayer(osm);
+        }
+    });
+    var mapAttribution = '<a href="https://massimilianomoraca.it/" target="_blank">Massimiliano Moraca</a> has created this map using <a href="https://openlayers.org/" target="_blank">OpenLayers</a>'
+    var userMapBox = 'maxdragonheart'
+    var tokenMapBox = 'pk.eyJ1IjoibWF4ZHJhZ29uaGVhcnQiLCJhIjoiY2p4a2k3a2twMmF2aDN4czhwMzBoZ2x1eCJ9.upAxT3LK0NCiP_jBcErzNw'
+    var outdoors = new ol.layer.Tile({
+        title: 'Topographic',
+        source: new ol.source.XYZ({
+        attributions: mapAttribution,
+            url: 'https://api.mapbox.com/styles/v1/' + userMapBox + '/'
+                + 'cjxkimp5j5s0o1ct4b68n4x1p/tiles/256/{z}/{x}/{y}?'
+                + 'access_token=' + tokenMapBox + ''
+            }),
+        zIndex: 0,
+    });
+    $('#BASEMAP_OUTDOORS').on('change', function() {
+        let isChecked = $(this).is(':checked');
+        if (isChecked) {
+            map.addLayer(outdoors);
+            map.removeLayer(osm);
+            map.removeLayer(monocromeGray);
+            map.removeLayer(satellite);
+        } else {
+            map.removeLayer(outdoors);
+        }
+    });
+    var monocromeGray = new ol.layer.Tile({
+        title: 'MonocromeGray',
+        source: new ol.source.XYZ({
+            attributions: mapAttribution,
+            url: 'https://api.mapbox.com/styles/v1/' + userMapBox + '/'
+                + 'ckcqb7nu809mu1inv9lfuj2ut/tiles/256/{z}/{x}/{y}?'
+                + 'access_token=' + tokenMapBox + ''
+        }),
+        zIndex: 0,
+    });
+    $('#BASEMAP_MONOCROMEGRAY').on('change', function() {
+        let isChecked = $(this).is(':checked');
+        if (isChecked) {
+            map.addLayer(monocromeGray);
+            map.removeLayer(osm);
+            map.removeLayer(outdoors);
+            map.removeLayer(satellite);
+        } else {
+            map.removeLayer(monocromeGray);
+        }
+    });
+    var satellite = new ol.layer.Tile({
+        title: 'Satellite',
+        source: new ol.source.XYZ({
+            attributions: mapAttribution,
+            url: 'https://api.mapbox.com/styles/v1/' + userMapBox + '/'
+                + 'ck0l7j9cx27df1clhcyok70mk/tiles/256/{z}/{x}/{y}?'
+                + 'access_token=' + tokenMapBox + ''
+        }),
+        zIndex: 0,
+    });
+    $('#BASEMAP_SATELLITE').on('change', function() {
+    let isChecked = $(this).is(':checked');
+        if (isChecked) {
+            map.addLayer(satellite);
+            map.removeLayer(osm);
+            map.removeLayer(outdoors);
+            map.removeLayer(monocromeGray);
+        } else {
+            map.removeLayer(satellite);
+        }
+    });
+
+    var wmsSource = 'https://geoserver.massimilianomoraca.me/geoserver/MassimilianoMoraca/wms'
+    var wmsTCI20220711 = new ol.layer.Tile({
+        title: 'TCI 6 agosto 2017',
+        source: new ol.source.TileWMS({
+        url: wmsSource,
+        params: {
+            'LAYERS': 'RGB_Campania_20220711',
+            'STYLES': null,
+        }
+        }),
+        minZoom: 0,
+        maxZoom: 28,
+        zIndex: 1,
+        opacity: 1.00
+    });
+    $('#wmsTCI20220711').on('change', function() {
+        let isChecked = $(this).is(':checked');
+        if (isChecked) {
+            map.addLayer(wmsTCI20220711);
+        } else {
+            map.removeLayer(wmsTCI20220711);
+        }
+    });
+    var wmsTCI20170806 = new ol.layer.Tile({
+        title: 'TCI 6 agosto 2017',
+        source: new ol.source.TileWMS({
+        url: wmsSource,
+        params: {
+            'LAYERS': 'RGB_Campania_20170806',
+            'STYLES': null,
+        }
+        }),
+        minZoom: 0,
+        maxZoom: 28,
+        zIndex: 1,
+        opacity: 1.00
+    });
+    $('#wmsTCI20170806').on('change', function() {
+        let isChecked = $(this).is(':checked');
+        if (isChecked) {
+            map.addLayer(wmsTCI20170806);
+        } else {
+            map.removeLayer(wmsTCI20170806);
+        }
+    });
+    var wmsSWIR20170712 = new ol.layer.Tile({
+        title: 'TCI 6 agosto 2017',
+        source: new ol.source.TileWMS({
+        url: wmsSource,
+        params: {
+            'LAYERS': 'RGB_B12_Campania_20170712',
+            'STYLES': null,
+        }
+        }),
+        minZoom: 0,
+        maxZoom: 28,
+        zIndex: 1,
+        opacity: 1.00
+    });
+    $('#wmsSWIR20170712').on('change', function() {
+        let isChecked = $(this).is(':checked');
+        if (isChecked) {
+            map.addLayer(wmsSWIR20170712);
+        } else {
+            map.removeLayer(wmsSWIR20170712);
+        }
+    });
+    var wmsTCI20170712 = new ol.layer.Tile({
+        title: 'TCI 6 agosto 2017',
+        source: new ol.source.TileWMS({
+        url: wmsSource,
+        params: {
+            'LAYERS': 'RGB_Campania_20170712',
+            'STYLES': null,
+        }
+        }),
+        minZoom: 0,
+        maxZoom: 28,
+        zIndex: 1,
+        opacity: 1.00
+    });
+    $('#wmsTCI20170712').on('change', function() {
+        let isChecked = $(this).is(':checked');
+        if (isChecked) {
+            map.addLayer(wmsTCI20170712);
+        } else {
+            map.removeLayer(wmsTCI20170712);
+        }
+    });
+    var wmsTCI20160712 = new ol.layer.Tile({
+        title: 'TCI 6 agosto 2017',
+        source: new ol.source.TileWMS({
+        url: wmsSource,
+        params: {
+            'LAYERS': 'RGB_Campania_20160712',
+            'STYLES': null,
+        }
+        }),
+        minZoom: 0,
+        maxZoom: 28,
+        zIndex: 1,
+        opacity: 1.00
+    });
+    $('#wmsTCI20160712').on('change', function() {
+        let isChecked = $(this).is(':checked');
+        if (isChecked) {
+            map.addLayer(wmsTCI20160712);
+        } else {
+            map.removeLayer(wmsTCI20160712);
+        }
+    });
+
+</script>
+
+</body>
+</html>
