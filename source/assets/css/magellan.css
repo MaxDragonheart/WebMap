@@ -1,0 +1,29 @@
+.map-wrapper-magellan, .magellan-timeline {
+  width: 100%;
+}
+.map-wrapper-magellan, .map-magellan {
+  height: 80vh;
+  background-color: rgba(233, 210, 172, 1);
+}
+.magellan-timeline {
+  height: 20vh;
+  background-color: rgba(233, 210, 172, 1);
+}
+.btn-map-legend-magellan {
+  bottom: 20.5vh;
+}
+.btn-map-legend-magellan {
+  position: absolute;
+  right: 0.5vw;
+  box-shadow: -5px -5px 8px 4px rgba(0, 0, 0, 0.2);
+}
+.magellan-map-title {
+  height: 5vh;
+}
+.magellan-timeline-body {
+  height: 15vh;
+}
+.card-magellan-timeline {
+  background-color: rgba(0,0,0,0);
+  max-height: 15vh !important;
+}

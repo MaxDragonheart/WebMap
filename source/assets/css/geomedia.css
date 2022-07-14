@@ -1,0 +1,65 @@
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100vw;
+  height: 100vh;
+}
+.map-wrapper, .map {
+  width: 100%;
+}
+.map-wrapper, .map {
+  height: 100vh;
+}
+.turn-back-map, .map-info, .btn-map-legend, .ol-attribution div, .map-calculus {
+  position: absolute;
+  border: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: -5px 5px 8px 4px rgba(0, 0, 0, 0.2);
+}
+.turn-back-map {
+  top: 0.5vh;
+  right: 0.5vw;
+}
+.map-info {
+  top: 7vh;
+  right: 0.5vw;
+}
+.map-calculus {
+  bottom: 50vh !important;
+  left: 0.5vw !important;
+}
+.map-swipe-left, .map-swipe-right {
+  position: absolute;
+  width: 20vw;
+  background-color: rgba(5, 102, 141, 1);
+  color: rgba(2, 195, 154, 1);
+  text-align: center;
+}
+.map-swipe-left {
+  bottom: 75vh;
+  left: 0.5vw;
+}
+.map-swipe-right {
+  bottom: 75vh;
+  right: 0.5vw;
+}
+.btn-map {
+  background-color: rgba(5, 102, 141, 1);
+  color: rgba(2, 195, 154, 1);
+}
+.btn-map:hover {
+  background-color: rgba(2, 195, 154, 1);
+  color: rgba(5, 102, 141, 1);
+}
+.btn-map-legend {
+  position: absolute;
+  right: 0.5vw;
+  box-shadow: -5px -5px 8px 4px rgba(0, 0, 0, 0.2);
+}
+.btn-map-legend {
+  bottom: 0.5vh;
+}
+.dropdown-menu-legend {
+  width: 15vw !important;
+  height: 37.5vh !important;
+}
