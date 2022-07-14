@@ -72,5 +72,249 @@
 </head>
 <body>
 
+<div class="map-wrapper">
+
+    <div class="map" id='map'></div>
+
+    <div class="turn-back-map">
+        <a class="btn btn-map" href="/mappe/webgis/">
+            <span data-toggle="tooltip" data-placement="top" title="Torna indietro">
+                <i class="fas fa-undo-alt"></i>
+            </span>
+        </a>
+    </div>
+
+    <div class="map-info">
+        <button class="btn btn-map" type="button" data-bs-toggle="offcanvas" data-bs-target="#mapDescription" aria-controls="mapDescription">
+            <span data-toggle="tooltip" data-placement="top" title="Descrizione">
+                <i class="fas fa-book"></i>
+            </span>
+        </button>
+        <div class="offcanvas offcanvas-end" tabindex="-1" id="mapDescription" aria-labelledby="mapDescriptionLabel">
+        <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="mapDescriptionLabel">Incendio del Vesuvio, estate 2017</h5>
+            <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body">
+            <article class="text-justify">
+                <p>Questa mappa, <strong>non ottimizzata per tablet e smartphone ma liberamente gestibile da pc</strong>, sfrutta i dati del progetto <a href="https://sentinel.esa.int/web/sentinel/missions/sentinel-2" target="_blank" rel="noopener">Copernicus Sentinel-2</a> per dare una lettura di parte del territorio campano a partire dal 2015.</p>
+                <p>Vengono usati in particolare i dati relativi ai periodi estivi, combinati per calcolare l'indice NDVI che viene mostrato nell'area del grafico ogni volta che si clicca su un punto della mappa.</p>
+                <p>Attivando e disattivando i layer satellitari &egrave; possibile inoltre visionare anche lo stato dei luoghi relativo al giorno censito. Per il solo 12 luglio 2017 viene riportato anche un layer da sensore infrarosso(SWIR - Short Wave Infra-Red); questo tipo di sensore consente di penetrare nuvole e fumo e grazie ad esso &egrave; possibile individuare i roghi presenti nel <a href="../../../../../blog/gis/analisi-dei-dati-copernicus-relativi-agli-incendi-sul-vesuvio-del-2017/" target="_blank" rel="noopener">Parco Nazionale del Vesuvio</a> ed in altre zone della Regione in quel giorno.</p>
+            </article>
+        </div>
+    </div>
+
+</div>
+
+<div class="btn-map-legend">
+    <button class="btn btn-map" type="button" data-bs-toggle="offcanvas" data-bs-target="#openMapControls" aria-controls="openMapControls">
+        <span data-toggle="tooltip" data-placement="top" title="Descrizione">
+            <i class="fas fa-layer-group"></i>
+        </span>
+    </button>
+    <div class="offcanvas offcanvas-end" tabindex="-1" id="openMapControls" aria-labelledby="openMapControlsLabel">
+        <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="openMapControlsLabel">Layers</h5>
+            <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body">
+            <div class="px-2">
+                <div class="custom-control custom-switch">
+                    <input type="radio" class="custom-control-input" name="switch-basemap" id="BASEMAP_OSM" checked>
+                    <label class="custom-control-label" for="BASEMAP_OSM">Lite</label>
+                </div>
+                <div class="custom-control custom-switch">
+                    <input type="radio" class="custom-control-input" name="switch-basemap" id="BASEMAP_OUTDOORS">
+                    <label class="custom-control-label" for="BASEMAP_OUTDOORS">Topographic</label>
+                </div>
+                <div class="custom-control custom-switch">
+                    <input type="radio" class="custom-control-input" name="switch-basemap" id="BASEMAP_MONOCROMEGRAY">
+                    <label class="custom-control-label" for="BASEMAP_MONOCROMEGRAY">Monocrome Gray</label>
+                </div>
+                <div class="custom-control custom-switch">
+                    <input type="radio" class="custom-control-input" name="switch-basemap" id="BASEMAP_SATELLITE">
+                    <label class="custom-control-label" for="BASEMAP_SATELLITE">Satellite</label>
+                </div>
+                <hr>
+                <div class="custom-control custom-switch">
+                    <input type="checkbox" class="custom-control-input" name="switch-basemap" id="20_RGB_Campania_20200706">
+                    <label class="custom-control-label" for="20_RGB_Campania_20200706">RGB 6 luglio 2020</label>
+                </div>
+                <div class="custom-control custom-switch">
+                    <input type="checkbox" class="custom-control-input" name="switch-basemap" id="19_RGB_Campania_20190702">
+                    <label class="custom-control-label" for="19_RGB_Campania_20190702">RGB 2 luglio 2019</label>
+                </div>
+                <div class="custom-control custom-switch">
+                    <input type="checkbox" class="custom-control-input" name="switch-basemap" id="18_RGB_Campania_20180702">
+                    <label class="custom-control-label" for="18_RGB_Campania_20180702">RGB 2 luglio 2018</label>
+                </div>
+                <div class="custom-control custom-switch">
+                    <input type="checkbox" class="custom-control-input" name="switch-basemap" id="15_RGB_Campania_20170712">
+                    <label class="custom-control-label" for="15_RGB_Campania_20170712">RGB 12 luglio 2017</label>
+                </div>
+
+                <div class="custom-control custom-switch">
+                    <input type="checkbox" class="custom-control-input" name="switch-basemap" id="14_wildfires_20170712">
+                    <label class="custom-control-label" for="14_wildfires_20170712">SWIR 12 luglio 2017</label>
+                </div>
+                <div class="custom-control custom-switch">
+                    <input type="checkbox" class="custom-control-input" name="switch-basemap" id="13_RGB_Campania_20160712">
+                    <label class="custom-control-label" for="13_RGB_Campania_20160712">RGB 12 luglio 2016</label>
+                </div>
+                <div class="custom-control custom-switch">
+                    <input type="checkbox" class="custom-control-input" name="switch-basemap" id="12_RGB_Campania_20150807">
+                    <label class="custom-control-label" for="12_RGB_Campania_20150807">RGB 7 agosto 2015</label>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="map-calculus">
+    <button class="btn btn-map" type="button" data-bs-toggle="offcanvas" data-bs-target="#mapCalculus" aria-controls="mapCalculus">
+        <span data-toggle="tooltip" data-placement="top" title="Analisi">
+            <i class="fas fa-cogs"></i>
+        </span>
+    </button>
+    <div class="offcanvas offcanvas-end" tabindex="-1" id="mapCalculus" aria-labelledby="mapCalculusLabel">
+        <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="mapCalculusLabel">Dati processati</h5>
+            <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body">
+            <article class="text-justify">
+                <p>In questa mappa ci sono dati processati. Spunta il box che segue per visualizzare le tabelle e/o i grafici presenti.</p>
+                <div class="custom-control custom-checkbox">
+                    <input type="checkbox" class="custom-control-input" id="ShowData">
+                    <label class="custom-control-label" for="ShowData">Visualizza</label>
+                </div>
+                <p class="bg-warning mt-1 px-2" id="gotoaction" style="display: none;">Chiudi questa finestra e clicca su un punto della mappa per visualizzare le tabelle e/o i grafici.</p>
+            </article>
+        </div>
+    </div>
+</div>
+
+<div class="card ol-popup" id="popup" style="display: none;">
+    <a href="#" id="popup-closer" class="ol-popup-closer"></a>
+    <div id="popup-content"></div>
+</div>
+
+</div>
+
+<script type="text/javascript">
+
+    var map = new ol.Map({
+        target: 'map',
+        controls: ol.control.defaults({
+            attribution: false
+        }),
+    });
+    var scaleLine = new ol.control.ScaleLine({
+        className: 'ol-scale-line',
+        target: document.getElementById('scale-line')
+    });
+    map.addControl(scaleLine);
+    var attribution = new ol.control.Attribution({
+        className: 'ol-attribution',
+        label: 'a',
+        collapsible: true,
+        collapsed: true,
+        target: document.getElementById('map-attribution'),
+    });
+    map.addControl(attribution);
+    var view = new ol.View({
+        center: ol.proj.fromLonLat([14.42637, 40.82115]),
+        zoom: 13,
+        maxZoom: 16,
+        minZoom: 10
+    });
+    map.setView(view);
+
+    var osm = new ol.layer.Tile({
+        source: new ol.source.OSM(),
+        zIndex: 0
+    });
+    map.addLayer(osm);
+    $('#BASEMAP_OSM').on('change', function() {
+        let isChecked = $(this).is(':checked');
+        if (isChecked) {
+            map.addLayer(osm);
+            map.removeLayer(outdoors);
+            map.removeLayer(monocromeGray);
+            map.removeLayer(satellite);
+        } else {
+            map.removeLayer(osm);
+        }
+    });
+    var mapAttribution = '<a href="https://massimilianomoraca.it/" target="_blank">Massimiliano Moraca</a> has created this map using <a href="https://openlayers.org/" target="_blank">OpenLayers</a>'
+    var userMapBox = 'maxdragonheart'
+    var tokenMapBox = 'pk.eyJ1IjoibWF4ZHJhZ29uaGVhcnQiLCJhIjoiY2p4a2k3a2twMmF2aDN4czhwMzBoZ2x1eCJ9.upAxT3LK0NCiP_jBcErzNw'
+    var outdoors = new ol.layer.Tile({
+        title: 'Topographic',
+        source: new ol.source.XYZ({
+        attributions: mapAttribution,
+            url: 'https://api.mapbox.com/styles/v1/' + userMapBox + '/'
+                + 'cjxkimp5j5s0o1ct4b68n4x1p/tiles/256/{z}/{x}/{y}?'
+                + 'access_token=' + tokenMapBox + ''
+            }),
+        zIndex: 0,
+    });
+    $('#BASEMAP_OUTDOORS').on('change', function() {
+        let isChecked = $(this).is(':checked');
+        if (isChecked) {
+            map.addLayer(outdoors);
+            map.removeLayer(osm);
+            map.removeLayer(monocromeGray);
+            map.removeLayer(satellite);
+        } else {
+            map.removeLayer(outdoors);
+        }
+    });
+    var monocromeGray = new ol.layer.Tile({
+        title: 'MonocromeGray',
+        source: new ol.source.XYZ({
+            attributions: mapAttribution,
+            url: 'https://api.mapbox.com/styles/v1/' + userMapBox + '/'
+                + 'ckcqb7nu809mu1inv9lfuj2ut/tiles/256/{z}/{x}/{y}?'
+                + 'access_token=' + tokenMapBox + ''
+        }),
+        zIndex: 0,
+    });
+    $('#BASEMAP_MONOCROMEGRAY').on('change', function() {
+        let isChecked = $(this).is(':checked');
+        if (isChecked) {
+            map.addLayer(monocromeGray);
+            map.removeLayer(osm);
+            map.removeLayer(outdoors);
+            map.removeLayer(satellite);
+        } else {
+            map.removeLayer(monocromeGray);
+        }
+    });
+    var satellite = new ol.layer.Tile({
+        title: 'Satellite',
+        source: new ol.source.XYZ({
+            attributions: mapAttribution,
+            url: 'https://api.mapbox.com/styles/v1/' + userMapBox + '/'
+                + 'ck0l7j9cx27df1clhcyok70mk/tiles/256/{z}/{x}/{y}?'
+                + 'access_token=' + tokenMapBox + ''
+        }),
+        zIndex: 0,
+    });
+    $('#BASEMAP_SATELLITE').on('change', function() {
+    let isChecked = $(this).is(':checked');
+        if (isChecked) {
+            map.addLayer(satellite);
+            map.removeLayer(osm);
+            map.removeLayer(outdoors);
+            map.removeLayer(monocromeGray);
+        } else {
+            map.removeLayer(satellite);
+        }
+    });
+
+
+</script>
+
 </body>
 </html>
