@@ -104,6 +104,63 @@
 
 </div>
 
+
+<!--    /////////-->
+<!--<div class="layer-control">-->
+
+<!--    <div class="row control-box">-->
+
+<!--      <div class="col-7 text-end checkbox">-->
+<!--        <div class="form-check form-switch">-->
+<!--          <input class="form-check-input" type="checkbox" role="switch" id="WMS{{ wms.pk }}">-->
+<!--          <label class="form-check-label" for="WMS{{ wms.pk }}">{{ wms.title }}</label>-->
+<!--        </div>-->
+<!--      </div>-->
+
+<!--      <div class="col-2 text-end">-->
+<!--        <a class="item-legend" data-bs-toggle="collapse" href="#WMS{{ wms.pk }}legend"-->
+<!--            role="button" aria-expanded="false" aria-controls="WMS{{ wms.pk }}legend"-->
+<!--            data-bs-toggle="tooltip" data-bs-placement="bottom" title="{% translate "Legenda" %}">-->
+<!--            <i class="fas fa-book"></i>-->
+<!--        </a>-->
+<!--      </div>-->
+
+<!--      <div class="col-2 text-end">-->
+<!--        <a class="item-controls" data-bs-toggle="collapse" href="#WMS{{ wms.pk }}controls"-->
+<!--            role="button" aria-expanded="false" aria-controls="WMS{{ wms.pk }}controls"-->
+<!--            data-bs-toggle="tooltip" data-bs-placement="bottom" title="{% translate "Controlli" %}">-->
+<!--            <i class="fas fa-cogs"></i>-->
+<!--        </a>-->
+<!--      </div>-->
+
+<!--    </div>-->
+
+<!--    <div class="collapse" id="WMS{{ wms.pk }}controls">-->
+<!--      <div class="slider-container">-->
+<!--        <input type="range" class="form-range"-->
+<!--                min="0" max="100" value="100" id="WMS{{ wms.pk }}slider">-->
+<!--        <label class="">{% translate "Trasparenza" %}: <span id="OUTPUT{{ wms.pk }}"></span> %</label>-->
+<!--      </div>-->
+<!--      <div class="counter-container">-->
+<!--        <div class="counter" id="">-->
+<!--          <input class="counter-object" id="WMS{{ wms.pk }}zIndex"-->
+<!--                  type="number" name="zIndex" min="0" max="99" step="1"-->
+<!--                  placeholder="{% if wms.set_index %}{{ wms.set_index }}{% else %}1{% endif %}"-->
+<!--                  value="{% if wms.set_index %}{{ wms.set_index }}{% else %}1{% endif %}">-->
+<!--        </div>-->
+<!--        <label class="">z-Index</label>-->
+<!--      </div>-->
+<!--    </div>-->
+<!--    <div class="collapse" id="WMS{{ wms.pk }}legend">-->
+<!--      <div id="legend{{ wms.pk }}"></div>-->
+<!--    </div>-->
+
+<!--    <table class="table table-striped" id="onclickinfo{{ wms.pk }}"></table>-->
+
+<!--  </div>-->
+<!--    /////////-->
+
+
 <div class="btn-map-legend">
     <button class="btn btn-map" type="button" data-bs-toggle="offcanvas" data-bs-target="#openMapControls" aria-controls="openMapControls">
         <span data-toggle="tooltip" data-placement="top" title="Descrizione">
@@ -117,6 +174,7 @@
         </div>
         <div class="offcanvas-body">
             <div class="px-2">
+                <h5>Basemap</h5>
                 <div class="custom-control custom-switch">
                     <input type="radio" class="custom-control-input" name="switch-basemap" id="BASEMAP_OSM" checked>
                     <label class="custom-control-label" for="BASEMAP_OSM">Lite</label>
@@ -134,6 +192,7 @@
                     <label class="custom-control-label" for="BASEMAP_SATELLITE">Satellite</label>
                 </div>
                 <hr>
+                <h5>Data</h5>
                 <div class="custom-control custom-switch">
                     <input type="checkbox" class="custom-control-input" name="switch-basemap" id="wmsTCI20220711">
                     <label class="custom-control-label" for="wmsTCI20220711">TCI 11 luglio 2022</label>
@@ -153,6 +212,10 @@
                 <div class="custom-control custom-switch">
                     <input type="checkbox" class="custom-control-input" name="switch-basemap" id="wmsTCI20160712">
                     <label class="custom-control-label" for="wmsTCI20160712">TCI 12 luglio 2016</label>
+                </div>
+                <div class="custom-control custom-switch">
+                    <input type="checkbox" class="custom-control-input" name="switch-basemap" id="wmsclc2018">
+                    <label class="custom-control-label" for="wmsclc2018">CORINE Land Cover 2018</label>
                 </div>
             </div>
         </div>
@@ -413,6 +476,103 @@
             map.removeLayer(wmsTCI20160712);
         }
     });
+
+
+    var wmsclc2018 = new ol.layer.Tile({
+        title: 'CLC 2012',
+        source: new ol.source.TileWMS({
+        url: wmsSource,
+        params: {
+            'LAYERS': 'clc2018_v2020_20u1',
+            'STYLES': 'CLC2018',
+        }
+        }),
+        minZoom: 0,
+        maxZoom: 28,
+        zIndex: 1,
+        opacity: 1.00
+    });
+    $('#wmsclc2018').on('change', function() {
+        let isChecked = $(this).is(':checked');
+        if (isChecked) {
+            map.addLayer(wmsclc2018);
+        } else {
+            map.removeLayer(wmsclc2018);
+        }
+    });
+
+    $('#ShowData').on('change', function() {
+      let isChecked = $(this).is(':checked');
+      if (isChecked) {
+        // $("#gotoaction").show();
+        // $("#popup").show();
+        //
+        // var container = document.getElementById('popup');
+        // var content = document.getElementById('popup-content');
+        // var closer = document.getElementById('popup-closer');
+        // var popup = new ol.Overlay({
+        //   element: container,
+        //   autoPan: true,
+        //   autoPanAnimation: {
+        //     duration: 250,
+        //   },
+        // });
+        // closer.onclick = function () {
+        //   popup.setPosition(undefined);
+        //   closer.blur();
+        //   return false;
+        // };
+        // map.addOverlay(popup);
+
+
+
+      } else {
+        // $("#gotoaction").hide();
+        // $("#popup").hide();
+      }
+    });
+
+
+
+
+    // var style_simple = new ol.style.Style({
+    //     fill: new ol.style.Fill({
+    //       color: '#ADD8E6',
+    //     }),
+    //     stroke: new ol.style.Stroke({
+    //       color: '#880000',
+    //       width: 1
+    //     }),
+    // });
+    // function simpleStyle(feature, resolution) {
+    //     return style_simple;
+    // };
+    // var domain = 'https://geoserver.massimilianomoraca.me'
+    // var workspace = 'MassimilianoMoraca';
+    // var layerName = 'vesuvio_survey_points';
+    // var layer = workspace + ':' + layerName;
+    // var projectionEpsgCode = '3857';
+    // var vectortileSource = new ol.layer.VectorTile({
+    //     style: simpleStyle,
+    //     source: new ol.source.VectorTile({
+    //         tilePixelRatio: 1, // oversampling when > 1
+    //         tileGrid: ol.tilegrid.createXYZ({maxZoom: 19}),
+    //         format: new ol.format.MVT(),
+    //         url: domain + '/geoserver/gwc/service/tms/1.0.0/' + layer + '@EPSG%3A'+ projectionEpsgCode +'@pbf/{z}/{x}/{-y}.pbf'
+    //     }),
+    // });
+    // map.addLayer(vectortileSource);
+
+    // https://geoserver.massimilianomoraca.me/geoserver/MassimilianoMoraca/wms?service=WMS
+    // &version=1.1.0
+    // &request=GetMap
+    // &layers=MassimilianoMoraca%3Avesuvio_survey_points
+    // &bbox=436162.34375%2C4514806.5%2C454760.9375%2C4520802.0
+    // &width=768
+    // &height=330
+    // &srs=EPSG%3A32633
+    // &styles=&format=geojson
+
 
 </script>
 
