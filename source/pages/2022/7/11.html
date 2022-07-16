@@ -340,11 +340,13 @@
 </div>
 
 <div class="map-calculus">
+
     <button class="btn btn-map" type="button" data-bs-toggle="offcanvas" data-bs-target="#mapCalculus" aria-controls="mapCalculus">
         <span data-toggle="tooltip" data-placement="top" title="Analisi">
             <i class="fas fa-cogs"></i>
         </span>
     </button>
+
     <div class="offcanvas offcanvas-end" tabindex="-1" id="mapCalculus" aria-labelledby="mapCalculusLabel">
         <div class="offcanvas-header">
             <h5 class="offcanvas-title" id="mapCalculusLabel">Dati processati</h5>
@@ -361,13 +363,23 @@
             </article>
         </div>
     </div>
+
 </div>
 
-
-<div class="card ol-popup" id="popup" style="display: none;">
-    <a href="#" id="popup-closer" class="ol-popup-closer"></a>
-    <div id="popup-content"></div>
+<div class="modal fade" id="surveyPointModal" tabindex="-1" aria-labelledby="surveyPointModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="surveyPointModalLabel">Modal title</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <img class="img-fluid img-chart" style="width: 100%; height: 600px;" alt="Chart from clicked point" src="">
+      </div>
+    </div>
+  </div>
 </div>
+    
 
 </div>
 
@@ -636,34 +648,68 @@
         }
     });
 
+    var surveyPoints = new ol.layer.Tile({
+        title: 'Survey Points',
+        source: new ol.source.TileWMS({
+        url: wmsSource,
+        params: {
+            'LAYERS': 'vesuvio_survey_points',
+        }
+        }),
+        minZoom: 10,
+        maxZoom: 18,
+        zIndex: 99,
+    });
+
+
+
     $('#ShowData').on('change', function() {
       let isChecked = $(this).is(':checked');
       if (isChecked) {
-        // $("#gotoaction").show();
-        // $("#popup").show();
-        //
-        // var container = document.getElementById('popup');
-        // var content = document.getElementById('popup-content');
-        // var closer = document.getElementById('popup-closer');
-        // var popup = new ol.Overlay({
-        //   element: container,
-        //   autoPan: true,
-        //   autoPanAnimation: {
-        //     duration: 250,
-        //   },
-        // });
-        // closer.onclick = function () {
-        //   popup.setPosition(undefined);
-        //   closer.blur();
-        //   return false;
-        // };
-        // map.addOverlay(popup);
+        map.addLayer(surveyPoints);
 
+        map.on('singleclick', function (event) {
+            var viewResolution = view.getResolution();
+            var coordinates = event.coordinate;
+            var epsg = 'EPSG:3857';
+            var params = {
+                'INFO_FORMAT': 'application/json'
+            };
+            var url = surveyPoints.getSource().getFeatureInfoUrl(
+              coordinates,
+              viewResolution,
+              epsg,
+              params,
+            );
+            // console.log(url);
+            async function getFeatureProperties() {
+                try {
+                    var response = await fetch(url);
 
+                    if (!response.ok) {
+                        throw new Error(`HTTP error!\n Status: ${response.status}\n Type: ${response.type}\n URL: ${response.url}`);
+                    } else {
+                        var data = await response.text();
+                        var json = JSON.parse(data).features[0].properties;
+                        // console.log(json);
+                        title = json['description'];
+                        imageLink = json['chart'];
+
+                    }
+
+                    $(".modal-title").text(title);
+                    $(".img-chart").attr("src", imageLink);
+                    $('#surveyPointModal').modal('show');
+
+                } catch (e) {
+                    console.log(e);
+                }
+            }
+            getFeatureProperties();
+        });
 
       } else {
-        // $("#gotoaction").hide();
-        // $("#popup").hide();
+        map.removeLayer(surveyPoints);
       }
     });
 
@@ -694,16 +740,6 @@
     //     }),
     // });
     // map.addLayer(vectortileSource);
-
-    // https://geoserver.massimilianomoraca.me/geoserver/MassimilianoMoraca/wms?service=WMS
-    // &version=1.1.0
-    // &request=GetMap
-    // &layers=MassimilianoMoraca%3Avesuvio_survey_points
-    // &bbox=436162.34375%2C4514806.5%2C454760.9375%2C4520802.0
-    // &width=768
-    // &height=330
-    // &srs=EPSG%3A32633
-    // &styles=&format=geojson
 
 
 </script>
