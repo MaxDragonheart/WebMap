@@ -29,43 +29,49 @@
     <meta name="twitter:description" content="A metà luglio 2017 un vasto incendio ha distrutto il patrimonio boschivo del Parco Nazionale del Vesuvio. Questa mappa consente di vedere i danni a distanza di anni." />
     <meta name="twitter:image" content="https://massimilianomoraca.it/media/uploads/images/2021/08/01/incendio_vesuvio_2017.jpg" />
 
-<!-- JQuery -->
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"
-  integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
-  crossorigin="anonymous"></script>
-<!-- Bootstrap -->
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"
-  integrity="sha384-7+zCNj/IqJ95wo16oMtfsKbZ9ccEh31eOz1HGyDuCQ6wgnyJNSYdrPa03rtR1zdB"
-  crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js"
-  integrity="sha384-QJHtvGhmr9XOIpI6YVutG+2QOK9T+ZnN4kzFN1RtK3zEFEIsxhlmWl5/YESvpZ13"
-  crossorigin="anonymous"></script>
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
-  rel="stylesheet"
-  integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3"
-  crossorigin="anonymous">
-<!-- Font Awesome -->
-<link rel="stylesheet"
-  href="https://use.fontawesome.com/releases/v5.8.1/css/all.css"
-  integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf"
-  crossorigin="anonymous">
-<script defer src="https://use.fontawesome.com/releases/v5.8.1/js/all.js"
-  integrity="sha384-g5uSoOSBd7KkhAMlnQILrecXvzst9TdC09/VM+pjDTCM+1il8RHz5fKANTFFb+gQ"
-  crossorigin="anonymous"></script>
-<!-- OpenLayers 6 -->
-<script src="https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@master/en/v6.14.1/build/ol.js"></script>
-<link rel="stylesheet"
-      href="https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@master/en/v6.14.1/css/ol.css">
-<!-- ol-ext -->
-<link rel="stylesheet" href="https://cdn.rawgit.com/Viglino/ol-ext/master/dist/ol-ext.min.css" />
-<script type="text/javascript" src="https://cdn.rawgit.com/Viglino/ol-ext/master/dist/ol-ext.min.js"></script>
-<!-- Plotly JS -->
-<script src="https://cdn.plot.ly/plotly-2.11.1.min.js"></script>
-<!-- Custom -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/MaxDragonheart/cdn@main/css/ol_custom.css">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/MaxDragonheart/cdn@main/css/geomedia.css">
-<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/MaxDragonheart/cdn@main/js/geomedia.js"></script>
-
+    <!-- JQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"
+          integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
+          crossorigin="anonymous"></script>
+    <!-- Bootstrap -->
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"
+      integrity="sha384-7+zCNj/IqJ95wo16oMtfsKbZ9ccEh31eOz1HGyDuCQ6wgnyJNSYdrPa03rtR1zdB"
+      crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js"
+      integrity="sha384-QJHtvGhmr9XOIpI6YVutG+2QOK9T+ZnN4kzFN1RtK3zEFEIsxhlmWl5/YESvpZ13"
+      crossorigin="anonymous"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3"
+      crossorigin="anonymous">
+    <!-- Font Awesome -->
+    <link rel="stylesheet"
+        href="https://use.fontawesome.com/releases/v5.8.1/css/all.css"
+        integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf"
+        crossorigin="anonymous">
+    <script defer src="https://use.fontawesome.com/releases/v5.8.1/js/all.js"
+          integrity="sha384-g5uSoOSBd7KkhAMlnQILrecXvzst9TdC09/VM+pjDTCM+1il8RHz5fKANTFFb+gQ"
+          crossorigin="anonymous"></script>
+    <!-- OpenLayers 6 -->
+    <script src="https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@master/en/v6.14.1/build/ol.js"></script>
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@master/en/v6.14.1/css/ol.css">
+    <!-- ol-ext -->
+    <link rel="stylesheet" href="https://cdn.rawgit.com/Viglino/ol-ext/master/dist/ol-ext.min.css" />
+    <script type="text/javascript" src="https://cdn.rawgit.com/Viglino/ol-ext/master/dist/ol-ext.min.js"></script>
+    <!-- Plotly JS -->
+    <script src="https://cdn.plot.ly/plotly-2.11.1.min.js"></script>
+    <!-- Custom -->
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/gh/MaxDragonheart/cdn@main/css/ol_custom.css">
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/gh/MaxDragonheart/cdn@main/css/geomedia.css">
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/gh/MaxDragonheart/cdn@main/opengeodata/css/gis.css">
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/gh/MaxDragonheart/cdn@main/opengeodata/css/app_gismanager.css">
+    <script type="text/javascript"
+            src="https://cdn.jsdelivr.net/gh/MaxDragonheart/cdn@main/opengeodata/js/gis.js"></script>
 
 </head>
 <body>
@@ -104,63 +110,6 @@
 
 </div>
 
-
-<!--    /////////-->
-<!--<div class="layer-control">-->
-
-<!--    <div class="row control-box">-->
-
-<!--      <div class="col-7 text-end checkbox">-->
-<!--        <div class="form-check form-switch">-->
-<!--          <input class="form-check-input" type="checkbox" role="switch" id="WMS{{ wms.pk }}">-->
-<!--          <label class="form-check-label" for="WMS{{ wms.pk }}">{{ wms.title }}</label>-->
-<!--        </div>-->
-<!--      </div>-->
-
-<!--      <div class="col-2 text-end">-->
-<!--        <a class="item-legend" data-bs-toggle="collapse" href="#WMS{{ wms.pk }}legend"-->
-<!--            role="button" aria-expanded="false" aria-controls="WMS{{ wms.pk }}legend"-->
-<!--            data-bs-toggle="tooltip" data-bs-placement="bottom" title="{% translate "Legenda" %}">-->
-<!--            <i class="fas fa-book"></i>-->
-<!--        </a>-->
-<!--      </div>-->
-
-<!--      <div class="col-2 text-end">-->
-<!--        <a class="item-controls" data-bs-toggle="collapse" href="#WMS{{ wms.pk }}controls"-->
-<!--            role="button" aria-expanded="false" aria-controls="WMS{{ wms.pk }}controls"-->
-<!--            data-bs-toggle="tooltip" data-bs-placement="bottom" title="{% translate "Controlli" %}">-->
-<!--            <i class="fas fa-cogs"></i>-->
-<!--        </a>-->
-<!--      </div>-->
-
-<!--    </div>-->
-
-<!--    <div class="collapse" id="WMS{{ wms.pk }}controls">-->
-<!--      <div class="slider-container">-->
-<!--        <input type="range" class="form-range"-->
-<!--                min="0" max="100" value="100" id="WMS{{ wms.pk }}slider">-->
-<!--        <label class="">{% translate "Trasparenza" %}: <span id="OUTPUT{{ wms.pk }}"></span> %</label>-->
-<!--      </div>-->
-<!--      <div class="counter-container">-->
-<!--        <div class="counter" id="">-->
-<!--          <input class="counter-object" id="WMS{{ wms.pk }}zIndex"-->
-<!--                  type="number" name="zIndex" min="0" max="99" step="1"-->
-<!--                  placeholder="{% if wms.set_index %}{{ wms.set_index }}{% else %}1{% endif %}"-->
-<!--                  value="{% if wms.set_index %}{{ wms.set_index }}{% else %}1{% endif %}">-->
-<!--        </div>-->
-<!--        <label class="">z-Index</label>-->
-<!--      </div>-->
-<!--    </div>-->
-<!--    <div class="collapse" id="WMS{{ wms.pk }}legend">-->
-<!--      <div id="legend{{ wms.pk }}"></div>-->
-<!--    </div>-->
-
-<!--    <table class="table table-striped" id="onclickinfo{{ wms.pk }}"></table>-->
-
-<!--  </div>-->
-<!--    /////////-->
-
-
 <div class="btn-map-legend">
     <button class="btn btn-map" type="button" data-bs-toggle="offcanvas" data-bs-target="#openMapControls" aria-controls="openMapControls">
         <span data-toggle="tooltip" data-placement="top" title="Descrizione">
@@ -174,6 +123,7 @@
         </div>
         <div class="offcanvas-body">
             <div class="px-2">
+
                 <h5>Basemap</h5>
                 <div class="custom-control custom-switch">
                     <input type="radio" class="custom-control-input" name="switch-basemap" id="BASEMAP_OSM" checked>
@@ -191,32 +141,199 @@
                     <input type="radio" class="custom-control-input" name="switch-basemap" id="BASEMAP_SATELLITE">
                     <label class="custom-control-label" for="BASEMAP_SATELLITE">Satellite</label>
                 </div>
-                <hr>
+
                 <h5>Data</h5>
-                <div class="custom-control custom-switch">
-                    <input type="checkbox" class="custom-control-input" name="switch-basemap" id="wmsTCI20220711">
-                    <label class="custom-control-label" for="wmsTCI20220711">TCI 11 luglio 2022</label>
+
+                <div class="control-box">
+                    <div class="custom-control custom-switch">
+                        <input type="checkbox" class="custom-control-input" name="switch-basemap" id="wmsCLC2018">
+                        <label class="custom-control-label" for="wmsCLC2018">CORINE Land Cover 2018</label>
+                    </div>
+                    <div class="text-end">
+                        <a class="item-legend" data-bs-toggle="collapse" href="#wmsCLC2018legend"
+                            role="button" aria-expanded="false" aria-controls="wmsCLC2018legend"
+                            data-bs-toggle="tooltip" data-bs-placement="bottom" title="">
+                            <i class="fas fa-book"></i>
+                        </a>
+                        <div class="collapse" id="wmsCLC2018legend">
+                          <div id="legendwmsCLC2018"></div>
+                        </div>
+                    </div>
+                    <div class="text-end">
+                        <a class="item-controls" data-bs-toggle="collapse" href="#wmsCLC2018controls"
+                            role="button" aria-expanded="false" aria-controls="wmsCLC2018controls"
+                            data-bs-toggle="tooltip" data-bs-placement="bottom" title="">
+                            <i class="fas fa-cogs"></i>
+                        </a>
+                        <div class="collapse" id="wmsCLC2018controls">
+                          <div class="slider-container">
+                            <input type="range" class="form-range"
+                                    min="0" max="100" value="100" id="wmsCLC2018slider">
+                            <label class="">Trasparenza: <span id="OUTPUTwmsCLC2018"></span> %</label>
+                          </div>
+                          <div class="counter-container">
+                            <div class="counter" id="">
+                              <input class="counter-object" id="wmsCLC2018zIndex"
+                                      type="number" name="zIndex" min="0" max="99" step="1"
+                                      placeholder="0"
+                                      value="0">
+                            </div>
+                            <label class="">z-Index</label>
+                          </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="custom-control custom-switch">
-                    <input type="checkbox" class="custom-control-input" name="switch-basemap" id="wmsTCI20170806">
-                    <label class="custom-control-label" for="wmsTCI20170806">TCI 6 agosto 2017</label>
+
+                <div class="control-box">
+                    <div class="custom-control custom-switch">
+                        <input type="checkbox" class="custom-control-input" name="switch-basemap" id="wmsTCI20220711">
+                        <label class="custom-control-label" for="wmsTCI20220711">TCI 11 luglio 2022</label>
+                    </div>
+                    <div class="text-end">
+                        <a class="item-controls" data-bs-toggle="collapse" href="#wmsTCI20220711controls"
+                            role="button" aria-expanded="false" aria-controls="wmsTCI20220711controls"
+                            data-bs-toggle="tooltip" data-bs-placement="bottom" title="">
+                            <i class="fas fa-cogs"></i>
+                        </a>
+                        <div class="collapse" id="wmsTCI20220711controls">
+                          <div class="slider-container">
+                            <input type="range" class="form-range"
+                                    min="0" max="100" value="100" id="wmsTCI20220711slider">
+                            <label class="">Trasparenza: <span id="OUTPUTwmsTCI20220711"></span> %</label>
+                          </div>
+                          <div class="counter-container">
+                            <div class="counter" id="">
+                              <input class="counter-object" id="wmsTCI20220711zIndex"
+                                      type="number" name="zIndex" min="0" max="99" step="1"
+                                      placeholder="0"
+                                      value="0">
+                            </div>
+                            <label class="">z-Index</label>
+                          </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="custom-control custom-switch">
-                    <input type="checkbox" class="custom-control-input" name="switch-basemap" id="wmsSWIR20170712">
-                    <label class="custom-control-label" for="wmsSWIR20170712">SWIR 12 luglio 2017</label>
+
+                <div class="control-box">
+                    <div class="custom-control custom-switch">
+                        <input type="checkbox" class="custom-control-input" name="switch-basemap" id="wmsTCI20170806">
+                        <label class="custom-control-label" for="wmsTCI20170806">TCI 6 agosto 2017</label>
+                    </div>
+                    <div class="text-end">
+                        <a class="item-controls" data-bs-toggle="collapse" href="#wmsTCI20170806controls"
+                            role="button" aria-expanded="false" aria-controls="wmsTCI20170806controls"
+                            data-bs-toggle="tooltip" data-bs-placement="bottom" title="">
+                            <i class="fas fa-cogs"></i>
+                        </a>
+                        <div class="collapse" id="wmsTCI20170806controls">
+                          <div class="slider-container">
+                            <input type="range" class="form-range"
+                                    min="0" max="100" value="100" id="wmsTCI20170806slider">
+                            <label class="">Trasparenza: <span id="OUTPUTwmsTCI20170806"></span> %</label>
+                          </div>
+                          <div class="counter-container">
+                            <div class="counter" id="">
+                              <input class="counter-object" id="wmsTCI20170806zIndex"
+                                      type="number" name="zIndex" min="0" max="99" step="1"
+                                      placeholder="0"
+                                      value="0">
+                            </div>
+                            <label class="">z-Index</label>
+                          </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="custom-control custom-switch">
-                    <input type="checkbox" class="custom-control-input" name="switch-basemap" id="wmsTCI20170712">
-                    <label class="custom-control-label" for="wmsTCI20170712">TCI 12 luglio 2017</label>
+
+                <div class="control-box">
+                    <div class="custom-control custom-switch">
+                        <input type="checkbox" class="custom-control-input" name="switch-basemap" id="wmsSWIR20170712">
+                        <label class="custom-control-label" for="wmsSWIR20170712">SWIR 12 luglio 2017</label>
+                    </div>
+                    <div class="text-end">
+                        <a class="item-controls" data-bs-toggle="collapse" href="#wmsSWIR20170712controls"
+                            role="button" aria-expanded="false" aria-controls="wmsSWIR20170712controls"
+                            data-bs-toggle="tooltip" data-bs-placement="bottom" title="">
+                            <i class="fas fa-cogs"></i>
+                        </a>
+                        <div class="collapse" id="wmsSWIR20170712controls">
+                          <div class="slider-container">
+                            <input type="range" class="form-range"
+                                    min="0" max="100" value="100" id="wmsSWIR20170712slider">
+                            <label class="">Trasparenza: <span id="OUTPUTwmsSWIR20170712"></span> %</label>
+                          </div>
+                          <div class="counter-container">
+                            <div class="counter" id="">
+                              <input class="counter-object" id="wmsSWIR20170712zIndex"
+                                      type="number" name="zIndex" min="0" max="99" step="1"
+                                      placeholder="0"
+                                      value="0">
+                            </div>
+                            <label class="">z-Index</label>
+                          </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="custom-control custom-switch">
-                    <input type="checkbox" class="custom-control-input" name="switch-basemap" id="wmsTCI20160712">
-                    <label class="custom-control-label" for="wmsTCI20160712">TCI 12 luglio 2016</label>
+
+                <div class="control-box">
+                    <div class="custom-control custom-switch">
+                        <input type="checkbox" class="custom-control-input" name="switch-basemap" id="wmsTCI20170712">
+                        <label class="custom-control-label" for="wmsTCI20170712">TCI 12 luglio 2017</label>
+                    </div>
+                    <div class="text-end">
+                        <a class="item-controls" data-bs-toggle="collapse" href="#wmsTCI20170712controls"
+                            role="button" aria-expanded="false" aria-controls="wmsTCI20170712controls"
+                            data-bs-toggle="tooltip" data-bs-placement="bottom" title="">
+                            <i class="fas fa-cogs"></i>
+                        </a>
+                        <div class="collapse" id="wmsTCI20170712controls">
+                          <div class="slider-container">
+                            <input type="range" class="form-range"
+                                    min="0" max="100" value="100" id="wmsTCI20170712slider">
+                            <label class="">Trasparenza: <span id="OUTPUTwmsTCI20170712"></span> %</label>
+                          </div>
+                          <div class="counter-container">
+                            <div class="counter" id="">
+                              <input class="counter-object" id="wmsTCI20170712zIndex"
+                                      type="number" name="zIndex" min="0" max="99" step="1"
+                                      placeholder="0"
+                                      value="0">
+                            </div>
+                            <label class="">z-Index</label>
+                          </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="custom-control custom-switch">
-                    <input type="checkbox" class="custom-control-input" name="switch-basemap" id="wmsclc2018">
-                    <label class="custom-control-label" for="wmsclc2018">CORINE Land Cover 2018</label>
+
+                <div class="control-box">
+                    <div class="custom-control custom-switch">
+                        <input type="checkbox" class="custom-control-input" name="switch-basemap" id="wmsTCI20160712">
+                        <label class="custom-control-label" for="wmsTCI20160712">TCI 12 luglio 2016</label>
+                    </div>
+                    <div class="text-end">
+                        <a class="item-controls" data-bs-toggle="collapse" href="#wmsTCI20160712controls"
+                            role="button" aria-expanded="false" aria-controls="wmsTCI20160712controls"
+                            data-bs-toggle="tooltip" data-bs-placement="bottom" title="">
+                            <i class="fas fa-cogs"></i>
+                        </a>
+                        <div class="collapse" id="wmsTCI20160712controls">
+                          <div class="slider-container">
+                            <input type="range" class="form-range"
+                                    min="0" max="100" value="100" id="wmsTCI20160712slider">
+                            <label class="">Trasparenza: <span id="OUTPUTwmsTCI20160712"></span> %</label>
+                          </div>
+                          <div class="counter-container">
+                            <div class="counter" id="">
+                              <input class="counter-object" id="wmsTCI20160712zIndex"
+                                      type="number" name="zIndex" min="0" max="99" step="1"
+                                      placeholder="0"
+                                      value="0">
+                            </div>
+                            <label class="">z-Index</label>
+                          </div>
+                        </div>
+                    </div>
                 </div>
+
             </div>
         </div>
     </div>
@@ -245,6 +362,7 @@
         </div>
     </div>
 </div>
+
 
 <div class="card ol-popup" id="popup" style="display: none;">
     <a href="#" id="popup-closer" class="ol-popup-closer"></a>
@@ -384,6 +502,8 @@
         let isChecked = $(this).is(':checked');
         if (isChecked) {
             map.addLayer(wmsTCI20220711);
+            layerOpacity(wmsTCI20220711, 'wmsTCI20220711slider', 'OUTPUTwmsTCI20220711');
+            layerZIndex(wmsTCI20220711, 'wmsTCI20220711zIndex', 'OUTPUTwmsTCI20220711');
         } else {
             map.removeLayer(wmsTCI20220711);
         }
@@ -406,6 +526,8 @@
         let isChecked = $(this).is(':checked');
         if (isChecked) {
             map.addLayer(wmsTCI20170806);
+            layerOpacity(wmsTCI20170806, 'wmsTCI20170806slider', 'OUTPUTwmsTCI20170806');
+            layerZIndex(wmsTCI20170806, 'wmsTCI20170806zIndex', 'OUTPUTwmsTCI20170806');
         } else {
             map.removeLayer(wmsTCI20170806);
         }
@@ -428,6 +550,8 @@
         let isChecked = $(this).is(':checked');
         if (isChecked) {
             map.addLayer(wmsSWIR20170712);
+            layerOpacity(wmsSWIR20170712, 'wmsSWIR20170712slider', 'OUTPUTwmsSWIR20170712');
+            layerZIndex(wmsSWIR20170712, 'wmsSWIR20170712zIndex', 'OUTPUTwmsSWIR20170712');
         } else {
             map.removeLayer(wmsSWIR20170712);
         }
@@ -450,6 +574,8 @@
         let isChecked = $(this).is(':checked');
         if (isChecked) {
             map.addLayer(wmsTCI20170712);
+            layerOpacity(wmsTCI20170712, 'wmsTCI20170712slider', 'OUTPUTwmsTCI20170712');
+            layerZIndex(wmsTCI20170712, 'wmsTCI20170712zIndex', 'OUTPUTwmsTCI20170712');
         } else {
             map.removeLayer(wmsTCI20170712);
         }
@@ -472,13 +598,15 @@
         let isChecked = $(this).is(':checked');
         if (isChecked) {
             map.addLayer(wmsTCI20160712);
+            layerOpacity(wmsTCI20160712, 'wmsTCI20160712slider', 'OUTPUTwmsTCI20160712');
+            layerZIndex(wmsTCI20160712, 'wmsTCI20160712zIndex', 'OUTPUTwmsTCI20160712');
         } else {
             map.removeLayer(wmsTCI20160712);
         }
     });
 
 
-    var wmsclc2018 = new ol.layer.Tile({
+    var wmsCLC2018 = new ol.layer.Tile({
         title: 'CLC 2012',
         source: new ol.source.TileWMS({
         url: wmsSource,
@@ -492,12 +620,15 @@
         zIndex: 1,
         opacity: 1.00
     });
-    $('#wmsclc2018').on('change', function() {
+    $('#wmsCLC2018').on('change', function() {
         let isChecked = $(this).is(':checked');
         if (isChecked) {
-            map.addLayer(wmsclc2018);
+            map.addLayer(wmsCLC2018);
+            getElementLegendImg('legendwmsCLC2018', wmsCLC2018, wmsSource, 'clc2018_v2020_20u1');
+            layerOpacity(wmsCLC2018, 'wmsCLC2018slider', 'OUTPUTwmsCLC2018');
+            layerZIndex(wmsCLC2018, 'wmsCLC2018zIndex', 'OUTPUTwmsCLC2018');
         } else {
-            map.removeLayer(wmsclc2018);
+            map.removeLayer(wmsCLC2018);
         }
     });
 
