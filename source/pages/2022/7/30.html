@@ -63,15 +63,9 @@
     <script src="https://cdn.plot.ly/plotly-2.11.1.min.js"></script>
     <!-- Custom -->
     <link rel="stylesheet"
-          href="https://cdn.jsdelivr.net/gh/MaxDragonheart/cdn@main/css/ol_custom.css">
+          href="../../../../source/assets/css/ol_custom.css">
     <link rel="stylesheet"
-          href="https://cdn.jsdelivr.net/gh/MaxDragonheart/cdn@main/css/geomedia.css">
-    <link rel="stylesheet"
-          href="https://cdn.jsdelivr.net/gh/MaxDragonheart/cdn@main/opengeodata/css/gis.css">
-    <link rel="stylesheet"
-          href="https://cdn.jsdelivr.net/gh/MaxDragonheart/cdn@main/opengeodata/css/app_gismanager.css">
-    <script type="text/javascript"
-            src="https://cdn.jsdelivr.net/gh/MaxDragonheart/cdn@main/opengeodata/js/gis.js"></script>
+          href="../../../../source/assets/css/geomedia.css">
 
 </head>
 <body>
@@ -150,6 +144,45 @@
 </div>
 <div class="map-swipe-right">
     <h4>2016-01-22</h4>
+</div>
+
+<div class="map-calculus">
+
+    <button class="btn btn-map" type="button" data-bs-toggle="offcanvas" data-bs-target="#mapCalculus" aria-controls="mapCalculus">
+        <span data-toggle="tooltip" data-placement="top" title="Analisi">
+            <i class="fas fa-cogs"></i>
+        </span>
+    </button>
+
+    <div class="offcanvas offcanvas-end" tabindex="-1" id="mapCalculus" aria-labelledby="mapCalculusLabel">
+        <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="mapCalculusLabel">Misure</h5>
+            <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body">
+            <article class="text-justify">
+                <p>Attiva o disattiva gli strumenti di misura.</p>
+                <div class="custom-control custom-checkbox">
+                    <input type="checkbox" class="custom-control-input" id="ShowData">
+                    <label class="custom-control-label" for="ShowData">Visualizza</label>
+                </div>
+                <p class="bg-warning mt-1 px-2" id="gotoaction" style="display: none;"></p>
+            </article>
+        </div>
+    </div>
+
+    <button class="btn btn-measure" type="button" data-bs-toggle="offcanvas" >
+        <span data-toggle="tooltip" data-placement="top" title="Distanza">
+            <i class="fas fa-ruler"></i>
+        </span>
+    </button>
+
+    <button class="btn btn-measure" type="button" data-bs-toggle="offcanvas" >
+        <span data-toggle="tooltip" data-placement="top" title="Superficie">
+            <i class="fas fa-draw-polygon"></i>
+        </span>
+    </button>
+
 </div>
 
 </div>
