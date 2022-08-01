@@ -163,15 +163,19 @@
             <article class="text-justify">
                 <p>Attiva o disattiva gli strumenti di misura.</p>
                 <div class="custom-control custom-checkbox">
-                    <input type="checkbox" class="custom-control-input">
-                    <label class="custom-control-label" for="ShowData">Visualizza</label>
+                    <label class="custom-control-label">
+                        <input type="checkbox" class="custom-control-input" data-bs-toggle="collapse" href="#measureArea"
+                            role="button" aria-expanded="false" aria-controls="measureArea"
+                            data-bs-toggle="tooltip" data-bs-placement="bottom" title="">
+                         Visualizza
+                    </label>
                 </div>
                 <p class="bg-warning mt-1 px-2" id="gotoaction" style="display: none;"></p>
             </article>
         </div>
     </div>
 
-    <div class="measure" id="measureArea">
+    <div id="measureArea" class="collapse">
         <div class="">
             <div class="custom-control custom-switch btn btn-measure mt-2 mb-1">
                 <input type="checkbox" class="custom-control-input" name="switch-basemap" id="Distance" value="LineString">
