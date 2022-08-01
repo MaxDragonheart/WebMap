@@ -163,7 +163,7 @@
             <article class="text-justify">
                 <p>Attiva o disattiva gli strumenti di misura.</p>
                 <div class="custom-control custom-checkbox">
-                    <input type="checkbox" class="custom-control-input" id="ShowData">
+                    <input type="checkbox" class="custom-control-input">
                     <label class="custom-control-label" for="ShowData">Visualizza</label>
                 </div>
                 <p class="bg-warning mt-1 px-2" id="gotoaction" style="display: none;"></p>
@@ -171,7 +171,7 @@
         </div>
     </div>
 
-    <div class="measure">
+    <div class="measure" id="measureArea">
         <div class="">
             <div class="custom-control custom-switch btn btn-measure mt-2 mb-1">
                 <input type="checkbox" class="custom-control-input" name="switch-basemap" id="Distance" value="LineString">
@@ -180,16 +180,18 @@
                         <i class="fas fa-ruler"></i>
                     </span>
                 </label>
+                <span id="length"></span>
             </div>
         </div>
         <div class="">
             <div class="custom-control custom-switch btn btn-measure mt-1">
-                <input type="checkbox" class="custom-control-input" name="switch-basemap" id="Surface">
+                <input type="checkbox" class="custom-control-input" name="switch-basemap" id="Surface" value="Polygon">
                 <label class="custom-control-label" for="Surface">
                     <span data-toggle="tooltip" data-placement="top" title="Misura la superficie">
                         <i class="fas fa-draw-polygon"></i>
                     </span>
                 </label>
+                <span id="area"></span>
             </div>
         </div>
     </div>
@@ -365,16 +367,26 @@
         let isChecked = $(this).is(':checked');
 
         if (isChecked) {
-            console.log('activate function');
+            addInteraction(geomType='LineString');
             map.addInteraction(draw);
         } else {
-            console.log('deactivate function');
+            map.removeInteraction(draw);
+        }
+    });
+    $('#Surface').on('click', function () {
+        let isChecked = $(this).is(':checked');
+
+        if (isChecked) {
+            addInteraction(geomType='Polygon');
+            map.addInteraction(draw);
+        } else {
             map.removeInteraction(draw);
         }
     });
 
 </script>
-
+    <link rel="stylesheet"
+          href="../../../../source/assets/css/measure.css">
     <script type="text/javascript"
             src="../../../assets/js/measure.js"></script>
 
