@@ -173,28 +173,25 @@
 
     <div class="measure">
         <div class="">
-            <button class="btn btn-measure" type="button" data-bs-toggle="offcanvas" id="Distance">
-                <span data-toggle="tooltip" data-placement="top" title="Distanza">
-                <i class="fas fa-ruler"></i>
-                </span>
-            </button>
+            <div class="custom-control custom-switch btn btn-measure mt-2 mb-1">
+                <input type="checkbox" class="custom-control-input" name="switch-basemap" id="Distance" value="LineString">
+                <label class="custom-control-label" for="Distance">
+                    <span data-toggle="tooltip" data-placement="top" title="Misura la distanza">
+                        <i class="fas fa-ruler"></i>
+                    </span>
+                </label>
+            </div>
         </div>
         <div class="">
-            <button class="btn btn-measure" type="button" data-bs-toggle="offcanvas"  id="Area">
-                <span data-toggle="tooltip" data-placement="top" title="Superficie">
-                <i class="fas fa-draw-polygon"></i>
-                </span>
-            </button>
+            <div class="custom-control custom-switch btn btn-measure mt-1">
+                <input type="checkbox" class="custom-control-input" name="switch-basemap" id="Surface">
+                <label class="custom-control-label" for="Surface">
+                    <span data-toggle="tooltip" data-placement="top" title="Misura la superficie">
+                        <i class="fas fa-draw-polygon"></i>
+                    </span>
+                </label>
+            </div>
         </div>
-
-        <form class="form-inline">
-          <label for="type">Measurement type &nbsp;</label>
-          <select id="type">
-            <option value="length">Length (LineString)</option>
-            <option value="area">Area (Polygon)</option>
-          </select>
-        </form>
-
     </div>
 
 </div>
@@ -363,8 +360,23 @@
     });
     map.addLayer(data_overlay)
 
+    // Active measure tool
+    $('#Distance').on('click', function () {
+        let isChecked = $(this).is(':checked');
+
+        if (isChecked) {
+            console.log('activate function');
+            map.addInteraction(draw);
+        } else {
+            console.log('deactivate function');
+            map.removeInteraction(draw);
+        }
+    });
+
 </script>
+
     <script type="text/javascript"
             src="../../../assets/js/measure.js"></script>
+
 </body>
 </html>
