@@ -39,7 +39,7 @@ vectorStyle = new ol.style.Style({
     color: 'rgba(255, 255, 255, 0.2)',
   }),
   stroke: new ol.style.Stroke({
-    color: 'rgba(0, 0, 0, 0.5)',
+    color: 'rgba(0, 255, 0, 1.0)',
     lineDash: [10, 10],
     width: 2,
   }),

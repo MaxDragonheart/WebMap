@@ -343,20 +343,79 @@
     ctrl.addLayer(leftMap);
     ctrl.addLayer(rightMap, true);
 
-    var data_overlay = new ol.layer.Tile({
-      source: new ol.source.TileWMS({
-        url: wmsSource,
-        params: {
-          'LAYERS': 'glaciers_front',
-          'STYLES': null,
-        }
-      }),
-      minZoom: 0,
-      maxZoom: 28,
-      zIndex: 1,
-      opacity: 1.00
+    var domain = 'https://geoserver.massimilianomoraca.me'
+    var workspace = 'MassimilianoMoraca';
+    var projectionEpsgCode = '3857';
+
+    function lineStyleFunction() {
+        var styleLine = new ol.style.Style({
+            stroke: new ol.style.Stroke({
+                color: 'rgba(255, 0, 0, 1.0)',
+                width: 5,
+            }),
+        });
+        return styleLine;
+    };
+
+    var glacierLayerName = 'glaciers_front';
+    var glacierLayer = workspace + ':' + glacierLayerName;
+    var glacierFront = new ol.layer.VectorTile({
+        style: lineStyleFunction,
+        source: new ol.source.VectorTile({
+            tilePixelRatio: 1, // oversampling when > 1
+            tileGrid: ol.tilegrid.createXYZ({maxZoom: 19}),
+            format: new ol.format.MVT(),
+            url: domain + '/geoserver/gwc/service/tms/1.0.0/' + glacierLayer + '@EPSG%3A'+ projectionEpsgCode +'@pbf/{z}/{x}/{-y}.pbf'
+        }),
+        zIndex: 99,
     });
-    map.addLayer(data_overlay)
+    map.addLayer(glacierFront);
+
+    function pointStyleFunction(feature, resolution) {
+        namePoint = feature.get('name').toString();
+
+        var stylePoint = new ol.style.Style({
+            image: new ol.style.Circle({
+                radius: 6,
+                fill: new ol.style.Fill({
+                    color: 'rgba(255, 0, 0, 1.0)',
+                }),
+                stroke: new ol.style.Stroke({
+                    color: 'rgba(255, 255, 0, 1.0)',
+                    width: 2
+                }),
+            }),
+            text: new ol.style.Text({
+                font: '12px Calibri,sans-serif',
+                fill: new ol.style.Fill({
+                    color: 'rgba(0, 0, 0, 1.0)',
+                }),
+                stroke: new ol.style.Stroke({
+                    color: 'rgba(255, 255, 255, 1.0)',
+                    width: 3,
+                }),
+                textAlign: 'left',
+                offsetX: 5,
+                offsetY: -10,
+            }),
+        });
+        stylePoint.getText().setText(namePoint);
+
+        return stylePoint;
+    };
+    var pointsLayerName = 'los_glacieres_survey_points';
+    var pointsLayer = workspace + ':' + pointsLayerName;
+    var points = new ol.layer.VectorTile({
+        style: pointStyleFunction,
+        source: new ol.source.VectorTile({
+            tilePixelRatio: 1, // oversampling when > 1
+            tileGrid: ol.tilegrid.createXYZ({maxZoom: 19}),
+            format: new ol.format.MVT(),
+            url: domain + '/geoserver/gwc/service/tms/1.0.0/' + pointsLayer + '@EPSG%3A'+ projectionEpsgCode +'@pbf/{z}/{x}/{-y}.pbf'
+        }),
+        zIndex: 99,
+    });
+    map.addLayer(points);
 
     // Active measure tool
     $('#Distance').on('click', function () {
