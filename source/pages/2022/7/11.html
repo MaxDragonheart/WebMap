@@ -63,16 +63,9 @@
     <script src="https://cdn.plot.ly/plotly-2.11.1.min.js"></script>
     <!-- Custom -->
     <link rel="stylesheet"
-          href="https://cdn.jsdelivr.net/gh/MaxDragonheart/cdn@main/css/ol_custom.css">
+          href="../../../assets/css/ol_custom.css">
     <link rel="stylesheet"
-          href="https://cdn.jsdelivr.net/gh/MaxDragonheart/cdn@main/css/geomedia.css">
-    <link rel="stylesheet"
-          href="https://cdn.jsdelivr.net/gh/MaxDragonheart/cdn@main/opengeodata/css/gis.css">
-    <link rel="stylesheet"
-          href="https://cdn.jsdelivr.net/gh/MaxDragonheart/cdn@main/opengeodata/css/app_gismanager.css">
-    <script type="text/javascript"
-            src="https://cdn.jsdelivr.net/gh/MaxDragonheart/cdn@main/opengeodata/js/gis.js"></script>
-
+          href="../../../assets/css/geomedia.css">
 </head>
 <body>
 
@@ -238,7 +231,7 @@
 
                 <div class="control-box">
                     <div class="custom-control custom-switch">
-                        <input type="checkbox" class="custom-control-input" name="switch-basemap" id="wmsSWIR20170712">
+                        <input type="checkbox" class="custom-control-input" name="switch-basemap" id="wmsSWIR20170712" checked>
                         <label class="custom-control-label" for="wmsSWIR20170712">SWIR 12 luglio 2017</label>
                     </div>
                     <div class="text-end">
@@ -553,6 +546,7 @@
         zIndex: 1,
         opacity: 1.00
     });
+    map.addLayer(wmsSWIR20170712);
     $('#wmsSWIR20170712').on('change', function() {
         let isChecked = $(this).is(':checked');
         if (isChecked) {
