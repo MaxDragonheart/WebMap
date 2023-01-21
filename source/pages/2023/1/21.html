@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="title" content="Miniere di lignite in Renania Settentrionale-Vestfalia">
+    <meta name="description" content="Miniere di lignite in Renania Settentrionale-Vestfalia osservate dai satelliti Sentinel-2 nell'agosto 2022 e 2016." />
+    <meta name="keywords" content="gis consulenza tutorial formazione">
+    <meta name="author" content="Massimiliano Moraca">
+    <meta http-equiv="Reply-to" content="info@massimilianomoraca.it">
+    <meta http-equiv="content-language" content="IT">
+    <meta http-equiv="Content-Type" content="text/html; iso-8859-1">
+    <meta name="robots" content="INDEX,FOLLOW">
+    <meta name="creation_Date" content="10 Agosto 2022">
+    <meta name="revisit-after" content="7 days">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <title>Miniere di lignite in Renania Settentrionale-Vestfalia</title>
+
+    <!-- OpenGraph -->
+    <meta property="og:title" content="Miniere di lignite in Renania Settentrionale-Vestfalia">
+    <meta name="description" property="og:description" content="Miniere di lignite in Renania Settentrionale-Vestfalia osservate dai satelliti Sentinel-2 nell'agosto 2022 e 2016.">
+    <meta property="og:type" content="article" >
+    <meta property="og:image" content="https://massimilianomoraca.it/media/uploads/images/2023/01/21/elsdorf.jpg">
+    <meta property="og:url" content="webmap.massimilianomoraca.me">
+    <meta name="twitter:creator" content="@maxdragonheart" />
+    <meta name="twitter:card" value="summary_large_image">
+    <meta name="twitter:title" content="Miniere di lignite in Renania Settentrionale-Vestfalia">
+    <meta name="twitter:description" content="Miniere di lignite in Renania Settentrionale-Vestfalia osservate dai satelliti Sentinel-2 nell'agosto 2022 e 2016." />
+    <meta name="twitter:image" content="https://massimilianomoraca.it/media/uploads/images/2023/01/21/elsdorf.jpg" />
+
+    <!-- JQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"
+          integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
+          crossorigin="anonymous"></script>
+    <!-- Bootstrap -->
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"
+      integrity="sha384-7+zCNj/IqJ95wo16oMtfsKbZ9ccEh31eOz1HGyDuCQ6wgnyJNSYdrPa03rtR1zdB"
+      crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js"
+      integrity="sha384-QJHtvGhmr9XOIpI6YVutG+2QOK9T+ZnN4kzFN1RtK3zEFEIsxhlmWl5/YESvpZ13"
+      crossorigin="anonymous"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3"
+      crossorigin="anonymous">
+    <!-- Font Awesome -->
+    <link rel="stylesheet"
+        href="https://use.fontawesome.com/releases/v5.8.1/css/all.css"
+        integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf"
+        crossorigin="anonymous">
+    <script defer src="https://use.fontawesome.com/releases/v5.8.1/js/all.js"
+          integrity="sha384-g5uSoOSBd7KkhAMlnQILrecXvzst9TdC09/VM+pjDTCM+1il8RHz5fKANTFFb+gQ"
+          crossorigin="anonymous"></script>
+    <!-- OpenLayers 6 -->
+    <link rel="stylesheet"
+          href="../../../assets/openlayers6.14.1/ol.css">
+    <script type="text/javascript"
+            src="../../../assets/openlayers6.14.1/ol.js"></script>
+    <!-- ol-ext -->
+    <link rel="stylesheet" href="https://cdn.rawgit.com/Viglino/ol-ext/master/dist/ol-ext.min.css" />
+    <script type="text/javascript" src="https://cdn.rawgit.com/Viglino/ol-ext/master/dist/ol-ext.min.js"></script>
+    <!-- Plotly JS -->
+    <script src="https://cdn.plot.ly/plotly-2.11.1.min.js"></script>
+    <!-- Custom -->
+    <link rel="stylesheet"
+          href="../../../assets/css/ol_custom.css">
+    <link rel="stylesheet"
+          href="../../../assets/css/geomedia.css">
+    <script type="text/javascript"
+        src="../../../assets/js/geomedia.js"></script>
+
+</head>
+<body>
+
+<div class="map-wrapper">
+
+    <div class="map" id='map'></div>
+
+    <div class="map-info">
+        <button class="btn btn-map" type="button" data-bs-toggle="offcanvas" data-bs-target="#mapDescription" aria-controls="mapDescription">
+            <span data-toggle="tooltip" data-placement="top" title="Descrizione">
+                <i class="fas fa-book"></i>
+            </span>
+        </button>
+        <div class="offcanvas offcanvas-end" tabindex="-1" id="mapDescription" aria-labelledby="mapDescriptionLabel">
+        <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="mapDescriptionLabel">Miniere di lignite in Renania Settentrionale-Vestfalia</h5>
+            <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body">
+            <article>
+                <p style="text-align: justify;">In questa mappa di comparazione è possibile confrontare l'avanzamento
+                    dei fronti di scavo delle miniere di lignite nei pressi di Elsdorf land tedesco della Renania
+                    Settentrionale-Vestfalia.</p>
+                <p style="text-align: justify;">Il confronto è stato possibile grazie a due scene Sentinel-2, una
+                    dell'agosto 2022 e l'altra dell'agosto 2016. Salta all'occhio anche la siccità che colpiva l'Europa
+                    nell'estate 2022.</p>
+
+            </article>
+        </div>
+    </div>
+
+</div>
+
+<div class="btn-map-legend">
+    <button class="btn btn-map" type="button" data-bs-toggle="offcanvas" data-bs-target="#openMapControls" aria-controls="openMapControls">
+        <span data-toggle="tooltip" data-placement="top" title="Descrizione">
+            <i class="fas fa-layer-group"></i>
+        </span>
+    </button>
+    <div class="offcanvas offcanvas-end" tabindex="-1" id="openMapControls" aria-labelledby="openMapControlsLabel">
+        <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="openMapControlsLabel">Layers</h5>
+            <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body">
+            <div class="px-2">
+                <div class="custom-control custom-switch">
+                    <input type="radio" class="custom-control-input" name="switch-basemap" id="BASEMAP_OSM" checked>
+                    <label class="custom-control-label" for="BASEMAP_OSM">Lite</label>
+                </div>
+                <div class="custom-control custom-switch">
+                    <input type="radio" class="custom-control-input" name="switch-basemap" id="BASEMAP_OUTDOORS">
+                    <label class="custom-control-label" for="BASEMAP_OUTDOORS">Topographic</label>
+                </div>
+                <div class="custom-control custom-switch">
+                    <input type="radio" class="custom-control-input" name="switch-basemap" id="BASEMAP_MONOCROMEGRAY">
+                    <label class="custom-control-label" for="BASEMAP_MONOCROMEGRAY">Monocrome Gray</label>
+                </div>
+                <div class="custom-control custom-switch">
+                    <input type="radio" class="custom-control-input" name="switch-basemap" id="BASEMAP_SATELLITE">
+                    <label class="custom-control-label" for="BASEMAP_SATELLITE">Satellite</label>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="map-swipe-left">
+    <h4>2022-08-10</h4>
+</div>
+<div class="map-swipe-right">
+    <h4>2016-06-07</h4>
+</div>
+
+<div class="map-calculus">
+
+    <button class="btn btn-map" type="button" data-bs-toggle="offcanvas" data-bs-target="#mapCalculus" aria-controls="mapCalculus">
+        <span data-toggle="tooltip" data-placement="top" title="Analisi">
+            <i class="fas fa-cogs"></i>
+        </span>
+    </button>
+
+    <div class="offcanvas offcanvas-end" tabindex="-1" id="mapCalculus" aria-labelledby="mapCalculusLabel">
+        <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="mapCalculusLabel">Misure</h5>
+            <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body">
+            <article class="text-justify">
+                <p>Attiva o disattiva gli strumenti di misura.</p>
+                <div class="custom-control custom-checkbox">
+                    <label class="custom-control-label">
+                        <input type="checkbox" class="custom-control-input" data-bs-toggle="collapse" href="#measureArea"
+                            role="button" aria-expanded="false" aria-controls="measureArea"
+                            data-bs-toggle="tooltip" data-bs-placement="bottom" title="">
+                         Visualizza
+                    </label>
+                </div>
+                <p class="bg-warning mt-1 px-2" id="gotoaction" style="display: none;"></p>
+            </article>
+        </div>
+    </div>
+
+    <div id="measureArea" class="collapse">
+        <div class="">
+            <div class="custom-control custom-switch btn btn-measure mt-2 mb-1">
+                <input type="checkbox" class="custom-control-input" name="switch-basemap" id="Distance" value="LineString">
+                <label class="custom-control-label" for="Distance">
+                    <span data-toggle="tooltip" data-placement="top" title="Misura la distanza">
+                        <i class="fas fa-ruler"></i>
+                    </span>
+                </label>
+                <span id="length"></span>
+            </div>
+        </div>
+        <div class="">
+            <div class="custom-control custom-switch btn btn-measure mt-1">
+                <input type="checkbox" class="custom-control-input" name="switch-basemap" id="Surface" value="Polygon">
+                <label class="custom-control-label" for="Surface">
+                    <span data-toggle="tooltip" data-placement="top" title="Misura la superficie">
+                        <i class="fas fa-draw-polygon"></i>
+                    </span>
+                </label>
+                <span id="area"></span>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+</div>
+
+<script type="text/javascript">
+
+    var map = new ol.Map({
+        target: 'map',
+        controls: ol.control.defaults({
+            attribution: false
+        }),
+    });
+    var scaleLine = new ol.control.ScaleLine({
+        className: 'ol-scale-line',
+        target: document.getElementById('scale-line')
+    });
+    map.addControl(scaleLine);
+    var attribution = new ol.control.Attribution({
+        className: 'ol-attribution',
+        label: 'a',
+        collapsible: true,
+        collapsed: true,
+        target: document.getElementById('map-attribution'),
+    });
+    map.addControl(attribution);
+    var view = new ol.View({
+      center: ol.proj.fromLonLat([6.44254, 50.96972]),
+      zoom: 11,
+      maxZoom: 16,
+      minZoom: 11
+    });
+    map.setView(view);
+
+    var osm = new ol.layer.Tile({
+        source: new ol.source.OSM(),
+        zIndex: 0
+    });
+    map.addLayer(osm);
+    $('#BASEMAP_OSM').on('change', function() {
+        let isChecked = $(this).is(':checked');
+        if (isChecked) {
+            map.addLayer(osm);
+            map.removeLayer(outdoors);
+            map.removeLayer(monocromeGray);
+            map.removeLayer(satellite);
+        } else {
+            map.removeLayer(osm);
+        }
+    });
+    var mapAttribution = '<a href="https://massimilianomoraca.it/" target="_blank">Massimiliano Moraca</a> has created this map using <a href="https://openlayers.org/" target="_blank">OpenLayers</a>'
+    var userMapBox = 'maxdragonheart'
+    var tokenMapBox = 'pk.eyJ1IjoibWF4ZHJhZ29uaGVhcnQiLCJhIjoiY2p4a2k3a2twMmF2aDN4czhwMzBoZ2x1eCJ9.upAxT3LK0NCiP_jBcErzNw'
+    var outdoors = new ol.layer.Tile({
+        title: 'Topographic',
+        source: new ol.source.XYZ({
+        attributions: mapAttribution,
+            url: 'https://api.mapbox.com/styles/v1/' + userMapBox + '/'
+                + 'cjxkimp5j5s0o1ct4b68n4x1p/tiles/256/{z}/{x}/{y}?'
+                + 'access_token=' + tokenMapBox + ''
+            }),
+        zIndex: 0,
+    });
+    $('#BASEMAP_OUTDOORS').on('change', function() {
+        let isChecked = $(this).is(':checked');
+        if (isChecked) {
+            map.addLayer(outdoors);
+            map.removeLayer(osm);
+            map.removeLayer(monocromeGray);
+            map.removeLayer(satellite);
+        } else {
+            map.removeLayer(outdoors);
+        }
+    });
+    var monocromeGray = new ol.layer.Tile({
+        title: 'MonocromeGray',
+        source: new ol.source.XYZ({
+            attributions: mapAttribution,
+            url: 'https://api.mapbox.com/styles/v1/' + userMapBox + '/'
+                + 'ckcqb7nu809mu1inv9lfuj2ut/tiles/256/{z}/{x}/{y}?'
+                + 'access_token=' + tokenMapBox + ''
+        }),
+        zIndex: 0,
+    });
+    $('#BASEMAP_MONOCROMEGRAY').on('change', function() {
+        let isChecked = $(this).is(':checked');
+        if (isChecked) {
+            map.addLayer(monocromeGray);
+            map.removeLayer(osm);
+            map.removeLayer(outdoors);
+            map.removeLayer(satellite);
+        } else {
+            map.removeLayer(monocromeGray);
+        }
+    });
+    var satellite = new ol.layer.Tile({
+        title: 'Satellite',
+        source: new ol.source.XYZ({
+            attributions: mapAttribution,
+            url: 'https://api.mapbox.com/styles/v1/' + userMapBox + '/'
+                + 'ck0l7j9cx27df1clhcyok70mk/tiles/256/{z}/{x}/{y}?'
+                + 'access_token=' + tokenMapBox + ''
+        }),
+        zIndex: 0,
+    });
+    $('#BASEMAP_SATELLITE').on('change', function() {
+    let isChecked = $(this).is(':checked');
+        if (isChecked) {
+            map.addLayer(satellite);
+            map.removeLayer(osm);
+            map.removeLayer(outdoors);
+            map.removeLayer(monocromeGray);
+        } else {
+            map.removeLayer(satellite);
+        }
+    });
+
+    var wmsSource = 'https://geoserver.massimilianomoraca.me/geoserver/MassimilianoMoraca/wms'
+    var leftMap = new ol.layer.Tile({
+      source: new ol.source.TileWMS({
+        url: wmsSource,
+        params: {
+          'LAYERS': 'elsdorf_20220810',
+          'STYLES': null,
+        }
+      }),
+      minZoom: 0,
+      maxZoom: 28,
+      zIndex: 1,
+      opacity: 1.00
+    });
+    map.addLayer(leftMap)
+    var rightMap = new ol.layer.Tile({
+      source: new ol.source.TileWMS({
+        url: wmsSource,
+        params: {
+          'LAYERS': 'elsdorf_20160607',
+          'STYLES': null,
+        }
+      }),
+      minZoom: 0,
+      maxZoom: 28,
+      zIndex: 1,
+      opacity: 1.00
+    });
+    map.addLayer(rightMap)
+
+    var ctrl = new ol.control.Swipe();
+    map.addControl(ctrl);
+    ctrl.addLayer(leftMap);
+    ctrl.addLayer(rightMap, true);
+
+    var domain = 'https://geoserver.massimilianomoraca.me'
+    var workspace = 'MassimilianoMoraca';
+    var projectionEpsgCode = '3857';
+
+    function lineStyleFunction() {
+        var styleLine = new ol.style.Style({
+            stroke: new ol.style.Stroke({
+                color: 'rgba(254, 0, 199, 1.0)',
+                width: 3,
+            }),
+        });
+        return styleLine;
+    };
+
+    var targetLayerName = 'tecolutla_river';
+    var targetLayer = workspace + ':' + targetLayerName;
+    var targetFront = new ol.layer.VectorTile({
+        style: lineStyleFunction,
+        source: new ol.source.VectorTile({
+            tilePixelRatio: 1, // oversampling when > 1
+            tileGrid: ol.tilegrid.createXYZ({maxZoom: 19}),
+            format: new ol.format.MVT(),
+            url: domain + '/geoserver/gwc/service/tms/1.0.0/' + targetLayer + '@EPSG%3A'+ projectionEpsgCode +'@pbf/{z}/{x}/{-y}.pbf'
+        }),
+        zIndex: 99,
+    });
+    map.addLayer(targetFront);
+
+    function pointStyleFunction(feature, resolution) {
+        namePoint = feature.get('name').toString();
+
+        var stylePoint = new ol.style.Style({
+            image: new ol.style.Circle({
+                radius: 6,
+                fill: new ol.style.Fill({
+                    color: 'rgba(255, 0, 0, 1.0)',
+                }),
+                stroke: new ol.style.Stroke({
+                    color: 'rgba(255, 255, 0, 1.0)',
+                    width: 2
+                }),
+            }),
+            text: new ol.style.Text({
+                font: '12px Calibri,sans-serif',
+                fill: new ol.style.Fill({
+                    color: 'rgba(0, 0, 0, 1.0)',
+                }),
+                stroke: new ol.style.Stroke({
+                    color: 'rgba(255, 255, 255, 1.0)',
+                    width: 3,
+                }),
+                textAlign: 'left',
+                offsetX: 5,
+                offsetY: -10,
+            }),
+        });
+        stylePoint.getText().setText(namePoint);
+
+        return stylePoint;
+    };
+    var pointsLayerName = 'tecolutla_points';
+    var pointsLayer = workspace + ':' + pointsLayerName;
+    var points = new ol.layer.VectorTile({
+        style: pointStyleFunction,
+        source: new ol.source.VectorTile({
+            tilePixelRatio: 1, // oversampling when > 1
+            tileGrid: ol.tilegrid.createXYZ({maxZoom: 19}),
+            format: new ol.format.MVT(),
+            url: domain + '/geoserver/gwc/service/tms/1.0.0/' + pointsLayer + '@EPSG%3A'+ projectionEpsgCode +'@pbf/{z}/{x}/{-y}.pbf'
+        }),
+        zIndex: 99,
+    });
+    map.addLayer(points);
+
+    // Active measure tool
+    $('#Distance').on('click', function () {
+        let isChecked = $(this).is(':checked');
+
+        if (isChecked) {
+            addInteraction(geomType='LineString');
+            map.addInteraction(draw);
+        } else {
+            map.removeInteraction(draw);
+        }
+    });
+    $('#Surface').on('click', function () {
+        let isChecked = $(this).is(':checked');
+
+        if (isChecked) {
+            addInteraction(geomType='Polygon');
+            map.addInteraction(draw);
+        } else {
+            map.removeInteraction(draw);
+        }
+    });
+
+
+</script>
+    <link rel="stylesheet"
+          href="../../../assets/css/measure.css">
+    <script type="text/javascript"
+            src="../../../assets/js/measure.js"></script>
+
+</body>
+</html>
