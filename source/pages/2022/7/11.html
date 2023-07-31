@@ -326,7 +326,7 @@
     </div>
 </div>
 
-<div class="map-calculus">
+<!-- <div class="map-calculus">
 
     <button class="btn btn-map" type="button" data-bs-toggle="offcanvas" data-bs-target="#mapCalculus" aria-controls="mapCalculus">
         <span data-toggle="tooltip" data-placement="top" title="Analisi">
@@ -351,7 +351,7 @@
         </div>
     </div>
 
-</div>
+</div> -->
 
 <div class="modal fade" id="surveyPointModal" tabindex="-1" aria-labelledby="surveyPointModalLabel" aria-hidden="true">
   <div class="modal-dialog">
@@ -636,7 +636,7 @@
         }
     });
 
-    $('#ShowData').on('change', function() {
+/*     $('#ShowData').on('change', function() {
       let isChecked = $(this).is(':checked');
       if (isChecked) {
 
@@ -702,7 +702,66 @@
       } else {
         map.removeLayer(surveyPoints);
       }
-    });
+    }); */
+
+    function simpleStyleFunction(feature, resolution) {
+            feature_id = feature.get('fid').toString();
+
+            var styleSimple = new ol.style.Style({
+                image: new ol.style.Circle({
+                    radius: 12,
+                    fill: new ol.style.Fill({
+                        color: '#ff0000'
+                    }),
+                    stroke: new ol.style.Stroke({
+                        color: '#ffffff',
+                        width: 4
+                    }),
+                }),
+                text: new ol.style.Text({
+                    font: '8px Calibri,sans-serif',
+                    fill: new ol.style.Fill({
+                        color:'#000'
+                    }),
+                    stroke: new ol.style.Stroke({
+                        color:'#ffffff',
+                        width: 3,
+                    }),
+                    textAlign: 'center',
+                    offsetX: 0,
+                    offsetY: 0,
+                }),
+            });
+            styleSimple.getText().setText(feature_id);
+
+            return styleSimple;
+        };
+        var domain = 'https://geoserver.massimilianomoraca.me'
+        var workspace = 'MassimilianoMoraca';
+        var layerName = 'vesuvio_survey_points';
+        var layer = workspace + ':' + layerName;
+        var projectionEpsgCode = '3857';
+        var vectortileSource = new ol.layer.VectorTile({
+            style: simpleStyleFunction,
+            source: new ol.source.VectorTile({
+                tilePixelRatio: 1, // oversampling when > 1
+                tileGrid: ol.tilegrid.createXYZ({maxZoom: 19}),
+                format: new ol.format.MVT(),
+                url: domain + '/geoserver/gwc/service/tms/1.0.0/' + layer + '@EPSG%3A'+ projectionEpsgCode +'@pbf/{z}/{x}/{-y}.pbf'
+            }),
+        });
+        map.addLayer(vectortileSource);
+        map.on('singleclick', function (event) {
+            var features = map.getFeaturesAtPixel(event.pixel);
+
+            if (features.length > 0) {
+                var properties = features[0].getProperties();
+                $(".modal-title").text(properties['description']);
+                $(".img-chart").attr("src", properties['chart']);
+                $('#surveyPointModal').modal('show');
+            }
+
+        });
 
 </script>
 
