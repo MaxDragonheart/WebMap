@@ -310,7 +310,10 @@
         }
     });
 
-    var wmsSource = 'https://geoserver.massimilianomoraca.me/geoserver/MassimilianoMoraca/wms'
+    var domain = 'https://geoserver.massimilianomoraca.me'
+    var workspace = 'MassimilianoMoraca';
+    var wmsSource = domain + '/geoserver/' + workspace + '/wms'
+
     var leftMap = new ol.layer.Tile({
       source: new ol.source.TileWMS({
         url: wmsSource,
@@ -345,8 +348,6 @@
     ctrl.addLayer(leftMap);
     ctrl.addLayer(rightMap, true);
 
-    var domain = 'https://geoserver.massimilianomoraca.me'
-    var workspace = 'MassimilianoMoraca';
     var projectionEpsgCode = '3857';
 
     function lineStyleFunction() {

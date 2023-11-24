@@ -482,7 +482,9 @@
         }
     });
 
-    var wmsSource = 'https://geoserver.massimilianomoraca.me/geoserver/MassimilianoMoraca/wms'
+    var domain = 'https://geoserver.massimilianomoraca.me'
+    var workspace = 'MassimilianoMoraca';
+    var wmsSource = domain + '/geoserver/' + workspace + '/wms'
 
     var wmsTCI20220711 = new ol.layer.Tile({
         title: 'TCI 6 agosto 2017',
@@ -736,8 +738,7 @@
 
             return styleSimple;
         };
-        var domain = 'https://geoserver.massimilianomoraca.me'
-        var workspace = 'MassimilianoMoraca';
+
         var layerName = 'vesuvio_survey_points';
         var layer = workspace + ':' + layerName;
         var projectionEpsgCode = '3857';
