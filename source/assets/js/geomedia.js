@@ -176,7 +176,7 @@ function getElementLegend(elementID, layerName) {
 
               // Legend for raster data
               var legendData = legendJSON.Raster.colormap.entries;
-              if (legendData !== 'undefined') {
+              if (legendData !== undefined) {
                 var divLegend = $("<div/>").attr("id","indexLegend");
                 $("#"+elementID).append(divLegend);
                 arrayColors = [];
@@ -204,7 +204,7 @@ function getElementLegend(elementID, layerName) {
               // Legend for linestring data
               var legendData = legendJSON.Line;
               console.log(legendData);
-              if (legendData !== 'undefined') {
+              if (legendData !== undefined) {
                 var divLegend = $("<div/>").attr("id","indexLegend");
                 $("#"+elementID).append(divLegend);
 
@@ -221,7 +221,7 @@ function getElementLegend(elementID, layerName) {
               // Legend for polygon data
               var legendData = legendJSON.Polygon;
               console.log(legendData);
-              if (legendData !== 'undefined') {
+              if (legendData !== undefined) {
                 var divLegend = $("<div/>").attr("id","indexLegend");
                 $("#"+elementID).append(divLegend);
 
@@ -240,7 +240,7 @@ function getElementLegend(elementID, layerName) {
               // Legend for point data
               var legendData = legendJSON.Point.graphics[0];
               console.log(legendData);
-              if (legendData !== 'undefined') {
+              if (legendData !== undefined) {
                 var divLegend = $("<div/>").attr("id","indexLegend");
                 $("#"+elementID).append(divLegend);
 
