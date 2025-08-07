@@ -267,7 +267,7 @@ function getElementLegend(elementID, layerName) {
 
   var viewResolution = view.getResolution();
   updateLegend(viewResolution);
-  // /// Aggiornamento della legenda al variare della risoluzione
+  // Aggiornamento della legenda al variare della risoluzione (codice disabilitato)
   // map.getView().on('change:resolution', function(event) {
   //   var resolution = event.target.getResolution();
   //   updateLegend(resolution);
