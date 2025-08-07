@@ -33,8 +33,9 @@ const formatArea = function (polygon) {
 const source = new ol.source.Vector();
 
 let draw; // global so we can remove it later
+let sketch; // will hold the currently drawn feature
 
-vectorStyle = new ol.style.Style({
+const vectorStyle = new ol.style.Style({
   fill: new ol.style.Fill({
     color: 'rgba(255, 255, 255, 0.2)',
   }),
@@ -56,8 +57,6 @@ vectorStyle = new ol.style.Style({
 
 function addInteraction(geomType) {
 
-  console.log(geomType)
-
   draw = new ol.interaction.Draw({
     source: source,
     type: geomType,
@@ -71,7 +70,7 @@ function addInteraction(geomType) {
 
     listener = sketch.getGeometry().on('change', function (evt) {
         const geom = evt.target;
-        //let output;
+        let output;
         if (geom instanceof ol.geom.Polygon) {
           output = formatArea(geom);
           document.getElementById("area").innerText = output;
