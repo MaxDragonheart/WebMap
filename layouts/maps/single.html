@@ -1,33 +1,27 @@
 {{ define "main" }}
-<!-- Mappa full-screen -->
+<!-- Contenitore mappa full-page -->
 <div id="map" class="map-container">
 
-  <!-- Basemap picker (alto-dx, dentro la mappa) -->
-  <div id="basemap-control" class="ol-control basemap-control">
-    <button id="basemap-toggle" type="button" aria-expanded="false">Basemap ▾</button>
-    <div id="basemap-menu" class="menu hidden" aria-hidden="true"></div>
+  <!-- Reset sotto ai pulsanti zoom -->
+  <div class="ol-control reset-control">
+    <button id="reset-view" type="button" title="Reset view">↺</button>
   </div>
 
-  <!-- Status bar (basso-centro): coord + barra di scala -->
-  <div id="status-bar" class="status-bar">
-    <span id="coords">Lon: —  Lat: —</span>
-    <div id="scale-line"></div>
+  <!-- Basemap select (alto-dx, dentro la mappa) -->
+  <div class="ol-control basemap-select">
+    <select id="basemap-select" title="Seleziona basemap"></select>
   </div>
 
-  <!-- Reset (sotto ai bottoni di zoom di OpenLayers) -->
-  <div id="reset-control" class="ol-control reset-control">
-    <button id="reset-btn" type="button" title="Reset view">↺</button>
-  </div>
+  <!-- Coordinate (alto-centro) -->
+  <div id="coords-container" class="ol-control coords-container">Lon: —  Lat: —</div>
 
+  <!-- Barra di scala (basso-centro) -->
+  <div id="scale-container" class="ol-control scale-bar-container"></div>
 </div>
 
 <!-- Passo la config dal data -->
 {{ $basename := .File.TranslationBaseName | default .File.BaseFileName }}
-{{ $k1 := $basename }}
-{{ $k2 := printf "%s-map" $basename }}
-{{ $k3 := printf "%s_map" $basename }}
-{{ $cfg := or (index site.Data.maps $k1) (index site.Data.maps $k2) (index site.Data.maps $k3) }}
-
+{{ $cfg := or (index site.Data.maps $basename) (index site.Data.maps (printf "%s-map" $basename)) (index site.Data.maps (printf "%s_map" $basename)) }}
 <script>
   window.__MAP_CONFIG__ = {{ $cfg | jsonify }};
   window.__MAP_TITLE__  = {{ .Title | jsonify }};

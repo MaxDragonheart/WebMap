@@ -9,18 +9,25 @@
   <!-- OpenLayers CSS -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ol/ol.css">
 
-  <!-- Stili locali -->
+  <!-- I TUOI CSS -->
+  {{ $geomedia := resources.Get "css/geomedia.css" }}
+  {{ $olcustom := resources.Get "css/ol_custom.css" }}
+  {{ $measure  := resources.Get "css/measure.css" }}
+  <link rel="stylesheet" href="{{ $geomedia.RelPermalink }}">
+  <link rel="stylesheet" href="{{ $olcustom.RelPermalink }}">
+  <link rel="stylesheet" href="{{ $measure.RelPermalink }}">
+
+  <!-- CSS della mappa -->
   {{ $mapcss := resources.Get "css/map.css" }}
   <link rel="stylesheet" href="{{ $mapcss.RelPermalink }}">
 </head>
 <body>
   {{ block "main" . }}{{ end }}
 
-  <!-- OpenLayers JS -->
+  <!-- OpenLayers JS (globale: window.ol) -->
   <script src="https://cdn.jsdelivr.net/npm/ol/dist/ol.js"></script>
 
-  <!-- Script locali (no minify) con cache-buster -->
-  {{ $v := now.Unix }}
-  {{ partial "map/scripts.html" (dict "ctx" . "v" $v) }}
+  <!-- Script locali (no minify) -->
+  {{ partial "map/scripts.html" . }}
 </body>
 </html>

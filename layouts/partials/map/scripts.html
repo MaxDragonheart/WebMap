@@ -1,6 +1,5 @@
 {{ $core := resources.Get "js/map-core.js" }}
 {{ $init := resources.Get "js/map-init.js" }}
-{{ $v := now.Unix }}
 
-<script src="{{ $core.RelPermalink }}?v={{ $v }}"></script>
-<script src="{{ $init.RelPermalink }}?v={{ $v }}"></script>
+<script src="{{ $core.RelPermalink }}?v={{ now.Unix }}"></script>
+<script src="{{ $init.RelPermalink }}?v={{ now.Unix }}"></script>

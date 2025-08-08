@@ -1,110 +1,53 @@
-/* ====== Layout full screen ====== */
-html, body {
-  height: 100%;
-  margin: 0;
-}
-
+/* Full screen */
+html, body { height: 100%; margin: 0; }
 #map.map-container {
-  position: fixed;
-  inset: 0;              /* top:0 right:0 bottom:0 left:0 */
-  width: 100%;
-  height: 100%;
+  position: fixed; inset: 0; width: 100%; height: 100%;
+  background: #f0f0f0;
 }
 
-/* Arrotondo leggermente gli angoli della mappa per estetica */
-#map.map-container {
-  border-radius: 8px;
-  overflow: hidden;
+/* Palette coerente con i tuoi CSS */
+:root{
+  --c-bg: rgba(5, 102, 141, 1);
+  --c-accent: rgba(2, 195, 154, 1);
+  --radius: 0;
 }
 
-/* ====== Controlli OpenLayers ====== */
-/* Sposto attribution in basso-sinistra */
-.ol-attribution {
-  bottom: 8px;
-  left: 8px;
-  right: auto;
+/* Pulsanti zoom OL (lasciamo a ol_custom.css il resto) */
+.ol-zoom { top: 1em; left: 1em; }
+
+/* Reset sotto lo zoom */
+.reset-control { top: 5.5em; left: 1em; }
+.reset-control button{
+  background: #fff; border: 1px solid #ccc; width: 30px; height: 30px;
+  border-radius: 4px; font-size: 16px; cursor: pointer;
+}
+.reset-control button:hover{ background:#eee; }
+
+/* Basemap select (alto-dx) */
+.basemap-select { top: 1em; right: 1em; }
+.basemap-select select{
+  padding: 4px 6px; border:1px solid #ccc; border-radius:4px; background:#fff; font-size:13px;
 }
 
-/* Reset sotto ai bottoni zoom default (si impila automaticamente) */
-.reset-control {
-  top: calc(0.5em + 70px); /* circa l'altezza del blocco .ol-zoom */
-  left: 0.5em;
+/* Coordinate in alto-centro */
+.coords-container{
+  top: 0.5em; left: 50%; transform: translateX(-50%);
+  background: var(--c-bg); color: var(--c-accent);
+  padding: 4px 8px; border-radius: var(--radius);
+  box-shadow: 5px 5px 8px 4px rgba(0,0,0,0.2); font-size:12px; z-index:3;
 }
-.reset-control button {
-  padding: 6px 10px;
-  font-size: 16px;
-  background: #0b1c2c;
-  color: #fff;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-}
-.reset-control button:hover { opacity: 0.9; }
 
-/* ====== Basemap picker (alto-dx dentro la mappa) ====== */
-.basemap-control {
-  position: absolute;
-  top: 0.5em;
-  right: 0.5em;
+/* Barra di scala in basso-centro */
+.scale-bar-container{
+  bottom: 0.5em; left: 50%; transform: translateX(-50%);
+  background: var(--c-bg); color: var(--c-accent);
+  padding: 6px 10px; border-radius: var(--radius);
+  box-shadow: 5px -5px 8px 4px rgba(0,0,0,0.2); z-index:3;
 }
-.basemap-control #basemap-toggle {
-  background: #0b1c2c;
-  color: #fff;
-  border: none;
-  border-radius: 6px;
-  padding: 6px 10px;
-  cursor: pointer;
+.scale-bar-container .ol-scale-line{ background: transparent !important; margin:0 !important; box-shadow:none !important; }
+.scale-bar-container .ol-scale-line-inner{
+  border: 2px solid var(--c-accent); border-top: none; color: var(--c-accent); padding: 0 6px;
 }
-.basemap-control .menu {
-  position: absolute;
-  right: 0;
-  margin-top: 6px;
-  background: #0b1c2c;
-  color: #fff;
-  border-radius: 6px;
-  padding: 6px;
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  z-index: 10;
-}
-.basemap-control .menu.hidden { display: none; }
-.basemap-control .menu button {
-  background: transparent;
-  color: #fff;
-  border: 1px solid #2a3a4a;
-  border-radius: 4px;
-  padding: 6px 8px;
-  text-align: left;
-  cursor: pointer;
-}
-.basemap-control .menu button:hover { background: #162636; }
 
-/* ====== Status bar (basso centro) ====== */
-.status-bar {
-  position: absolute;
-  left: 50%;
-  bottom: 8px;
-  transform: translateX(-50%);
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  background: rgba(11,28,44,0.9);
-  color: #fff;
-  padding: 6px 10px;
-  border-radius: 6px;
-  font: 12px/1.2 system-ui, sans-serif;
-}
-.status-bar #scale-line {
-  min-width: 140px;
-}
-.status-bar .ol-scale-line {
-  background: transparent;
-  border: none;
-  margin: 0;
-}
-.status-bar .ol-scale-line-inner {
-  border: 2px solid #fff;
-  border-top: none;
-  color: #fff;
-}
+/* Attribution in basso-sx — di solito già nel tuo ol_custom.css */
+.ol-attribution{ bottom: .5em; left:.5em; right:auto; }
