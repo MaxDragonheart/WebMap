@@ -1,4 +1,4 @@
-// Bootstrap pagina mappa con log e sicurezza sulla visibilità layer
+// Bootstrap pagina mappa con enforcement robusto del centro/zoom da config (dopo render)
 (function () {
   if (!window.__MAP_CONFIG__) {
     console.error("Missing __MAP_CONFIG__");
@@ -7,30 +7,41 @@
   const cfg = window.__MAP_CONFIG__;
   console.log("Map init with config:", cfg);
 
-  const created = WebMap.createMap("map", cfg);
-  const map = created.map;
-  const basemapGroup = created.basemapGroup;
+  const { map, basemapGroup } = WebMap.createMap("map", cfg);
+  window.__olmap__ = map; // debug
 
-  // Espongo per debug
-  window.__olmap__ = map;
+  function enforceCenterZoom() {
+    try {
+      const center = Array.isArray(cfg?.view?.center) ? cfg.view.center : null;
+      const zoom   = (typeof cfg?.view?.zoom === "number") ? cfg.view.zoom : null;
+      if (center) {
+        const target = ol.proj.fromLonLat([parseFloat(center[0]), parseFloat(center[1])]);
+        map.getView().setCenter(target);
+      }
+      if (zoom !== null) {
+        map.getView().setZoom(zoom);
+      }
+      const lonlat = ol.proj.toLonLat(map.getView().getCenter());
+      console.log("View after enforce:", { lon: lonlat[0], lat: lonlat[1], zoom: map.getView().getZoom() });
+    } catch (e) {
+      console.warn("Unable to enforce center/zoom from config:", e);
+    }
+  }
+
+  // subito e dopo il primo render per evitare override tardivi
+  enforceCenterZoom();
+  map.once("rendercomplete", enforceCenterZoom);
 
   // Controlli base
   WebMapControls.bindZoom(map);
   WebMapControls.bindPanReset(map, cfg);
   WebMapControls.bindCoordsAndScale(map);
 
-  // Basemap picker
+  // Basemap picker (menu deve avere 3 voci con la tua config)
   WebMapBasemaps.initPicker(basemapGroup);
 
-  // Ricontrollo visibilità e loggo
-  let anyVisible = false;
-  basemapGroup.getLayers().forEach(l => { if (l.getVisible()) anyVisible = true; });
-  if (!anyVisible && basemapGroup.getLayers().getLength() > 0) {
-    basemapGroup.getLayers().item(0).setVisible(true);
-  }
   console.log("Basemaps after init:",
-              basemapGroup.getLayers().getArray().map(l => ({ title: l.get("title"), visible: l.getVisible() })));
+    basemapGroup.getLayers().getArray().map(l => ({ title: l.get("title"), visible: l.getVisible() })));
 
-  // Trigger update size
   setTimeout(() => map.updateSize(), 50);
 })();

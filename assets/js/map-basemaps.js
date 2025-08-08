@@ -1,18 +1,33 @@
-// Basemap picker: menu a scomparsa e switch dei layer
+// Basemap picker: menu a scomparsa e switch dei layer + log
 (function () {
   function buildMenu(basemapGroup) {
     const menu = document.getElementById("basemap-menu");
     if (!menu) return;
 
-    // Pulisco e ricreo
     menu.innerHTML = "";
-    basemapGroup.getLayers().forEach((layer, idx) => {
+
+    const layers = basemapGroup.getLayers().getArray();
+    console.log("Basemap picker building menu with", layers.length, "layers");
+
+    layers.forEach((layer, idx) => {
       const btn = document.createElement("button");
       btn.type = "button";
-      btn.textContent = layer.get("title") || `Basemap ${idx+1}`;
+      btn.textContent = layer.get("title") || `Basemap ${idx + 1}`;
       btn.addEventListener("click", () => {
-        basemapGroup.getLayers().forEach(l => l.setVisible(false));
+        layers.forEach(l => l.setVisible(false));
         layer.setVisible(true);
+        // dopo lo switch riaffermiamo centro/zoom da config se definito
+        if (window.__MAP_CONFIG__?.view?.center || typeof window.__MAP_CONFIG__?.view?.zoom === "number") {
+          const center = window.__MAP_CONFIG__.view.center;
+          const zoom   = window.__MAP_CONFIG__.view.zoom;
+          if (center) {
+            const target = ol.proj.fromLonLat([parseFloat(center[0]), parseFloat(center[1])]);
+            basemapGroup.getMap().getView().animate({ center: target, duration: 0 });
+          }
+          if (typeof zoom === "number") {
+            basemapGroup.getMap().getView().animate({ zoom: zoom, duration: 0 });
+          }
+        }
         hideMenu();
       });
       menu.appendChild(btn);
@@ -45,7 +60,6 @@
       }
     });
 
-    // chiudi cliccando fuori
     document.addEventListener("click", (e) => {
       if (!menu.contains(e.target) && e.target !== toggle) hideMenu();
     });

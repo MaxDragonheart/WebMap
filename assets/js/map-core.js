@@ -1,11 +1,16 @@
-// Core: crea mappa, layer di base da config e utilità + fallback
+// Core: crea mappa, layer di base da config e utilità (niente override di default se la config c'è)
 window.WebMap = (function () {
   function createView(cfg) {
-    const center = cfg?.view?.center || [12.4964, 41.9028]; // Roma
-    const zoom = cfg?.view?.zoom ?? 12;
+    // Se la config specifica center/zoom li uso *senza* fallback
+    const hasCenter = Array.isArray(cfg?.view?.center) && cfg.view.center.length === 2;
+    const hasZoom = typeof cfg?.view?.zoom === "number";
+
+    const centerLonLat = hasCenter ? cfg.view.center : [12.4964, 41.9028]; // default solo se manca
+    const zoomVal = hasZoom ? cfg.view.zoom : 12;
+
     return new ol.View({
-      center: ol.proj.fromLonLat(center),
-      zoom
+      center: ol.proj.fromLonLat([parseFloat(centerLonLat[0]), parseFloat(centerLonLat[1])]),
+      zoom: zoomVal
     });
   }
 
@@ -14,7 +19,7 @@ window.WebMap = (function () {
 
     if (base.type === "osm") {
       return new ol.layer.Tile({
-        title: base.title || "OSM",
+        title: base.title || "OpenStreetMap",
         source: new ol.source.OSM(),
         visible: !!base.visible
       });
@@ -46,19 +51,30 @@ window.WebMap = (function () {
     return null;
   }
 
+  // Accetta sia array che oggetto (Hugo a volte serializza le liste YAML come oggetti indicizzati)
+  function normalizeBasemaps(bm) {
+    if (!bm) return [];
+    if (Array.isArray(bm)) return bm;
+    if (typeof bm === "object") return Object.values(bm);
+    return [];
+  }
+
   function buildBasemapGroup(cfg) {
-    const list = Array.isArray(cfg?.basemaps) ? cfg.basemaps : [];
+    const list = normalizeBasemaps(cfg?.basemaps);
     const layers = list.map(basemapFromConfig).filter(Boolean);
 
-    // Fallback: se non ci sono layer, aggiungi OSM
     if (layers.length === 0) {
       console.warn("No basemaps from config. Injecting default OSM fallback.");
-      layers.push(new ol.layer.Tile({ title: "OSM (fallback)", source: new ol.source.OSM(), visible: true }));
+      layers.push(new ol.layer.Tile({
+        title: "OSM (fallback)",
+        source: new ol.source.OSM(),
+        visible: true
+      }));
     }
 
     const group = new ol.layer.Group({ title: "Basemaps", layers });
-    console.log("BasemapGroup layers:", group.getLayers().getLength(),
-                group.getLayers().getArray().map(l => ({ title: l.get("title"), visible: l.getVisible() })));
+    console.log("BasemapGroup layers:",
+      group.getLayers().getArray().map(l => ({ title: l.get("title"), visible: l.getVisible() })));
     return group;
   }
 
@@ -73,16 +89,13 @@ window.WebMap = (function () {
     });
 
     // Se nessun layer è visibile, accendi il primo
-    let anyVisible = false;
-    basemapGroup.getLayers().forEach(l => { if (l.getVisible()) anyVisible = true; });
+    let anyVisible = basemapGroup.getLayers().getArray().some(l => l.getVisible());
     if (!anyVisible && basemapGroup.getLayers().getLength() > 0) {
       basemapGroup.getLayers().item(0).setVisible(true);
       console.log("Forced visible on first basemap.");
     }
 
-    // Forza un render
     setTimeout(() => map.updateSize(), 0);
-
     return { map, basemapGroup };
   }
 
