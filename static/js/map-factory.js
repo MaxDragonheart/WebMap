@@ -7,13 +7,13 @@
   const OSM = ol.source.OSM;
   const XYZ = ol.source.XYZ;
   const GeoTIFF = ol.source.GeoTIFF;
+  const VectorSource = ol.source.Vector;
 
   const TileLayer = ol.layer.Tile;
   const ImageLayer = ol.layer.Image;
   const VectorLayer = ol.layer.Vector;
 
-  const VectorSource = ol.source.Vector;
-
+  const ZoomControl = ol.control.Zoom;
   const FullScreen = ol.control.FullScreen;
   const ScaleLine = ol.control.ScaleLine;
 
@@ -23,6 +23,7 @@
   const Overlay = ol.Overlay;
   const Feature = ol.Feature;
   const Point = ol.geom.Point;
+  const Polygon = ol.geom.Polygon;
 
   const Style = ol.style.Style;
   const CircleStyle = ol.style.Circle;
@@ -30,7 +31,7 @@
   const Stroke = ol.style.Stroke;
   const Text = ol.style.Text;
 
-  // --- Helpers ---
+  // ========== Helpers ==========
   function normalizeConfig(cfg) {
     if (!cfg) return {};
     if (typeof cfg === "string") {
@@ -48,14 +49,12 @@
         }),
       });
     }
-    // default OSM
     return new TileLayer({ source: new OSM() });
   }
 
   function createRasterLayer(cfg) {
     if (!cfg || !cfg.enabled) return null;
     if (cfg.type === "geotiff" && cfg.url) {
-      // COG via HTTP range (ricorda CORS su S3)
       const src = new GeoTIFF({
         sources: [{ url: cfg.url }],
         convertToRGB: true,
@@ -163,10 +162,89 @@
     return overlay;
   }
 
+  // ========== Funzioni misura (dai tuoi JS) ==========
+  function formatLength(line) {
+    const length = ol.sphere.getLength(line);
+    return length > 100
+      ? (Math.round((length / 1000) * 100) / 100) + " km"
+      : (Math.round(length * 100) / 100) + " m";
+  }
+
+  function formatArea(polygon) {
+    const area = ol.sphere.getArea(polygon);
+    return area > 10000
+      ? (Math.round((area / 1000000) * 100) / 100) + " km²"
+      : (Math.round(area * 100) / 100) + " m²";
+  }
+
+  function addMeasureInteraction(map, type, outputId) {
+    const source = new VectorSource();
+    const draw = new ol.interaction.Draw({
+      source,
+      type,
+      style: new Style({
+        fill: new Fill({ color: 'rgba(255,255,255,0.2)' }),
+        stroke: new Stroke({ color: 'rgba(0,255,0,1)', lineDash: [10, 10], width: 2 }),
+        image: new CircleStyle({
+          radius: 5,
+          stroke: new Stroke({ color: 'rgba(0,0,0,0.7)' }),
+          fill: new Fill({ color: 'rgba(255,255,255,0.2)' })
+        })
+      })
+    });
+    map.addInteraction(draw);
+    draw.on('drawstart', function (evt) {
+      const sketch = evt.feature;
+      sketch.getGeometry().on('change', function (ev) {
+        const geom = ev.target;
+        const out = geom instanceof Polygon ? formatArea(geom) : formatLength(geom);
+        const el = document.getElementById(outputId);
+        if (el) el.innerHTML = out;
+      });
+    });
+  }
+
+  // ========== Utility (dai tuoi JS) ==========
+  function getMouseCoordinates(map, lonId, latId) {
+    map.on('pointermove', function (event) {
+      const coordinate = toLonLat(event.coordinate);
+      const lon = coordinate[0].toFixed(5);
+      const lat = coordinate[1].toFixed(5);
+      const elLon = document.getElementById(lonId);
+      const elLat = document.getElementById(latId);
+      if (elLon) elLon.innerHTML = lon;
+      if (elLat) elLat.innerHTML = lat;
+    });
+  }
+
+  function createBBoxLayer(bboxCoordinates, bboxName) {
+    const coords = [[
+      [bboxCoordinates[0], bboxCoordinates[1]],
+      [bboxCoordinates[0], bboxCoordinates[3]],
+      [bboxCoordinates[2], bboxCoordinates[3]],
+      [bboxCoordinates[2], bboxCoordinates[1]],
+      [bboxCoordinates[0], bboxCoordinates[1]],
+    ]];
+    const polygon = new Feature(
+      new Polygon(coords).transform('EPSG:4326','EPSG:3857')
+    );
+    return new VectorLayer({
+      title: bboxName,
+      source: new VectorSource({ features: [polygon] }),
+      opacity: 0
+    });
+  }
+
+  function zoomOnLayer(map, layer, padding = [20, 20, 20, 20], duration = 500) {
+    const extent = layer.getSource().getExtent();
+    map.getView().fit(extent, { size: map.getSize(), padding, duration });
+  }
+
+  // ========== Factory principale ==========
   function createMap(rawConfig, targetId, ids) {
     const config = normalizeConfig(rawConfig);
 
-    const center = fromLonLat(config.center || [14.25141, 40.84578]); // Napoli default
+    const center = fromLonLat(config.center || [14.25141, 40.84578]);
     const zoom = typeof config.zoom === "number" ? config.zoom : 12;
 
     const baseLayer = createBasemap(config.basemap);
@@ -177,14 +255,15 @@
     if (rasterLayer) layers.push(rasterLayer);
     if (pointsLayer) layers.push(pointsLayer);
 
-    // NIENTE controls nel costruttore → usa i default interni
+    // NIENTE defaults(): lasciamo che OL aggiunga i controlli base automaticamente
     const map = new Map({
       target: targetId,
       layers,
       view: new View({ center, zoom })
     });
 
-    // Aggiungi controlli opzionali dopo
+    // Alcuni bundle UMD non inseriscono automaticamente lo Zoom: lo aggiungo in modo esplicito
+    map.addControl(new ZoomControl());
     if (config.controls?.scaleLine) map.addControl(new ScaleLine());
     if (config.controls?.fullscreen) map.addControl(new FullScreen());
 
@@ -194,9 +273,14 @@
     if (config.popup?.enabled) {
       createPopup(map, ids, config.popup?.content);
     }
+
     return map;
   }
 
-  // export globale
+  // export globali
   window.createMap = createMap;
+  window.addMeasureInteraction = addMeasureInteraction;
+  window.getMouseCoordinates = getMouseCoordinates;
+  window.createBBoxLayer = createBBoxLayer;
+  window.zoomOnLayer = zoomOnLayer;
 })();

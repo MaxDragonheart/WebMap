@@ -4,3 +4,7 @@
 
     sudo apt-get install -y hugo
 
+## Avvio di Hugo
+
+    hugo server -D
+
