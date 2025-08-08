@@ -18,10 +18,25 @@
     {{ partial "map/basemap-picker.html" . }}
   </div>
 
-  <!-- Bootstrap della mappa via JS con dati da /data/maps/<slug>.yaml -->
+  <!-- Bootstrap della mappa via JS -->
+  {{ $basename := .File.TranslationBaseName | default .File.BaseFileName }}
+  {{ $k1 := $basename }}
+  {{ $k2 := printf "%s-map" $basename }}
+  {{ $k3 := printf "%s_map" $basename }}
+
+  {{ $cfg := or (index site.Data.maps $k1) (index site.Data.maps $k2) (index site.Data.maps $k3) }}
+
   <script>
-    window.__MAP_CONFIG__ = {{ (index site.Data.maps (.File.TranslationBaseName | default .File.BaseFileName)) | jsonify }};
+    window.__MAP_CONFIG__ = {{ $cfg | jsonify }};
     window.__MAP_TITLE__  = {{ .Title | jsonify }};
+    console.log("MAP_CONFIG lookup:", {
+      basename: {{ $basename | jsonify }},
+      tried_keys: [{{ $k1 | jsonify }}, {{ $k2 | jsonify }}, {{ $k3 | jsonify }}],
+      found: window.__MAP_CONFIG__
+    });
+    if (!window.__MAP_CONFIG__) {
+      console.warn("⚠️ Nessuna configurazione mappa trovata in /data/maps/. Verifica il nome file YAML.");
+    }
   </script>
 </section>
 {{ end }}
