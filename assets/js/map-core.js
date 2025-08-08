@@ -77,7 +77,8 @@
     }
 
     // ---- Reset sotto ai pulsanti di zoom ----
-    var resetBtn = document.getElementById("reset-view");
+    var resetWrap = document.querySelector("#map .reset-control");
+    var resetBtn  = document.getElementById("reset-view");
     if (resetBtn) {
       resetBtn.addEventListener("click", function () {
         map.getView().animate({
@@ -87,6 +88,33 @@
         });
       });
     }
+
+    // Allinea il contenitore del reset subito sotto lo Zoom, con 8px di margine
+    function alignResetUnderZoom() {
+      if (!resetWrap) return;
+      // trova il controllo Zoom
+      var zoomCtrl = null;
+      map.getControls().forEach(function (c) {
+        if (c instanceof ol.control.Zoom) zoomCtrl = c;
+      });
+      if (!zoomCtrl || !zoomCtrl.element) return;
+
+      var mapRect  = map.getTargetElement().getBoundingClientRect();
+      var zoomRect = zoomCtrl.element.getBoundingClientRect();
+
+      var top  = (zoomRect.bottom - mapRect.top) + 8;  // 8px di gap
+      var left = (zoomRect.left   - mapRect.left);
+
+      resetWrap.style.top  = top + "px";
+      resetWrap.style.left = left + "px";
+    }
+
+    // Applica dopo il primo render e su resize
+    map.once("postrender", alignResetUnderZoom);
+    // OL ricalcola dimensioni anche dopo updateSize; agganciamoci agli eventi comuni
+    window.addEventListener("resize", alignResetUnderZoom);
+    // piccolo ritardo per sicurezza su mount
+    setTimeout(alignResetUnderZoom, 0);
 
     // ---- Basemap select (alto-dx) ----
     var selectEl = document.getElementById("basemap-select");

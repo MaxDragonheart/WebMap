@@ -5,18 +5,18 @@ html, body { height: 100%; margin: 0; }
   background: #f0f0f0;
 }
 
-/* Palette coerente con i tuoi CSS */
+/* Palette coerente */
 :root{
   --c-bg: rgba(5, 102, 141, 1);
   --c-accent: rgba(2, 195, 154, 1);
   --radius: 0;
 }
 
-/* Pulsanti zoom OL (lasciamo a ol_custom.css il resto) */
+/* Zoom OL (posizionato da OL / tuoi CSS) */
 .ol-zoom { top: 1em; left: 1em; }
 
-/* Reset sotto lo zoom */
-.reset-control { top: 5.5em; left: 1em; }
+/* Reset: il JS lo allinea sotto lo zoom, quindi NIENTE top/left fissi */
+.reset-control { position: absolute; }
 .reset-control button{
   background: #fff; border: 1px solid #ccc; width: 30px; height: 30px;
   border-radius: 4px; font-size: 16px; cursor: pointer;
@@ -24,13 +24,14 @@ html, body { height: 100%; margin: 0; }
 .reset-control button:hover{ background:#eee; }
 
 /* Basemap select (alto-dx) */
-.basemap-select { top: 1em; right: 1em; }
+.basemap-select { top: 1em; right: 1em; position: absolute; }
 .basemap-select select{
   padding: 4px 6px; border:1px solid #ccc; border-radius:4px; background:#fff; font-size:13px;
 }
 
 /* Coordinate in alto-centro */
 .coords-container{
+  position: absolute;
   top: 0.5em; left: 50%; transform: translateX(-50%);
   background: var(--c-bg); color: var(--c-accent);
   padding: 4px 8px; border-radius: var(--radius);
@@ -39,6 +40,7 @@ html, body { height: 100%; margin: 0; }
 
 /* Barra di scala in basso-centro */
 .scale-bar-container{
+  position: absolute;
   bottom: 0.5em; left: 50%; transform: translateX(-50%);
   background: var(--c-bg); color: var(--c-accent);
   padding: 6px 10px; border-radius: var(--radius);
@@ -49,5 +51,5 @@ html, body { height: 100%; margin: 0; }
   border: 2px solid var(--c-accent); border-top: none; color: var(--c-accent); padding: 0 6px;
 }
 
-/* Attribution in basso-sx — di solito già nel tuo ol_custom.css */
+/* Attribution in basso-sx (in genere già nel tuo ol_custom.css) */
 .ol-attribution{ bottom: .5em; left:.5em; right:auto; }
