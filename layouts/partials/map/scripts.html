@@ -1,15 +1,14 @@
-{{/* Carico i JS minificati con Hugo Pipes. */}}
+{{ $v := now.Unix }} <!-- cache-buster -->
 
-{{ $core     := resources.Get "js/map-core.js"     | resources.Minify | resources.Fingerprint }}
-{{ $controls := resources.Get "js/map-controls.js" | resources.Minify | resources.Fingerprint }}
-{{ $bases    := resources.Get "js/map-basemaps.js" | resources.Minify | resources.Fingerprint }}
+{{ $core     := resources.Get "js/map-core.js" }}
+{{ $controls := resources.Get "js/map-controls.js" }}
+{{ $bases    := resources.Get "js/map-basemaps.js" }}
 
-<script src="{{ $core.RelPermalink }}"></script>
-<script src="{{ $controls.RelPermalink }}"></script>
-<script src="{{ $bases.RelPermalink }}"></script>
+<script src="{{ $core.RelPermalink }}?v={{ $v }}"></script>
+<script src="{{ $controls.RelPermalink }}?v={{ $v }}"></script>
+<script src="{{ $bases.RelPermalink }}?v={{ $v }}"></script>
 
-{{/* Includi l'init SOLO nelle pagine singole della sezione "maps" */}}
 {{ if and .IsPage (or (eq .Section "maps") (eq .Type "maps")) }}
-  {{ $init := resources.Get "js/map-init.js" | resources.Minify | resources.Fingerprint }}
-  <script src="{{ $init.RelPermalink }}"></script>
+  {{ $init := resources.Get "js/map-init.js" }}
+  <script src="{{ $init.RelPermalink }}?v={{ $v }}"></script>
 {{ end }}
