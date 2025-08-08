@@ -69,14 +69,14 @@
     if (Array.isArray(config.basemaps) && config.basemaps.length > 0) {
       defs = config.basemaps;
     } else {
-      // fallback minimale
+      // default sicuri
       defs = [{
         id: "osm",
-        name: "OpenStreetMap",
+        name: "OSM",
         type: "osm"
       },{
         id: "esri_sat",
-        name: "Esri World Imagery",
+        name: "Esri Sat",
         type: "xyz",
         url: "https://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
         attribution: "Tiles © Esri"
@@ -205,9 +205,10 @@
     });
   }
 
-  function initBasemapRadios(containerId, cfg) {
-    const box = document.getElementById(containerId);
-    if (!box) return;
+  // Inizializza la lista radio all’interno del pannello a scomparsa
+  function initBasemapPanel(listId, cfg, onSelect) {
+    const ul = document.getElementById(listId);
+    if (!ul) return;
 
     const defs = (Array.isArray(cfg.basemaps) && cfg.basemaps.length > 0)
       ? cfg.basemaps
@@ -220,29 +221,35 @@
         ];
     const defId = cfg.defaultBasemap || defs[0].id;
 
-    // pulisci e crea radio
-    box.innerHTML = "";
+    ul.innerHTML = "";
     defs.forEach(d => {
-      const wrap = document.createElement("label");
-      wrap.className = "bm-item";
+      const li = document.createElement("li");
+      li.className = "bm-row";
+
+      const label = document.createElement("label");
+      label.className = "bm-radio";
+
       const inp = document.createElement("input");
       inp.type = "radio";
       inp.name = "basemap";
       inp.value = d.id;
       if (d.id === defId) inp.checked = true;
+
       const txt = document.createElement("span");
       txt.textContent = d.name || d.id;
-      wrap.appendChild(inp);
-      wrap.appendChild(txt);
-      box.appendChild(wrap);
+
+      label.appendChild(inp);
+      label.appendChild(txt);
+      li.appendChild(label);
+      ul.appendChild(li);
 
       inp.addEventListener("change", function () {
-        if (this.checked) setBasemap(this.value);
+        if (this.checked) {
+          setBasemap(this.value);
+          if (typeof onSelect === "function") onSelect(this.value);
+        }
       });
     });
-
-    // mostra il container
-    box.removeAttribute("hidden");
   }
 
   function getMouseCoordinates(map, lonId, latId) {
@@ -321,5 +328,5 @@
   window.createBBoxLayer = createBBoxLayer;
   window.zoomOnLayer = zoomOnLayer;
   window.setBasemap = setBasemap;
-  window.initBasemapRadios = initBasemapRadios;
+  window.initBasemapPanel = initBasemapPanel;
 })();
