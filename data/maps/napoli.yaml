@@ -1,26 +1,31 @@
-center: [14.251409703644354, 40.84578475094159]  # [lon, lat]
+title: "Test – Napoli"
+description: "Mappa di test centrata su Napoli con OpenLayers."
+center: [14.251409703644354, 40.84578475094159]
 zoom: 12
 
-basemap:
-  type: xyz
-  url: "https://{a-c}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-  attribution: "© OpenStreetMap contributors"
-
-raster:
-  enabled: false
+basemaps:
+  - id: "osm"
+    name: "OSM"
+    type: "osm"
+  - id: "esri_sat"
+    name: "Esri Sat"
+    type: "xyz"
+    url: "https://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
+    attribution: "Tiles © Esri"
+defaultBasemap: "osm"
 
 controls:
-  slider: false      # per il test non serve
-  scaleLine: true
   fullscreen: true
+  scaleLine: true
+  slider: false
 
 popup:
   enabled: true
   content: "📍 {name}<br>Lon: {lon}, Lat: {lat}"
 
-# NUOVO: elenco punti (puoi aggiungerne altri in futuro)
 points:
   - name: "Napoli"
-    coord: [14.251409703644354, 40.84578475094159]  # [lon, lat]
-    # (opzionale) popup custom solo per questo feature:
-    # popup: "Napoli – centro storico"
+    coord: [14.251409703644354, 40.84578475094159]
+
+raster:
+  enabled: false

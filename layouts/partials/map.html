@@ -24,6 +24,11 @@
     <span class="coord-label">Lat:</span>
     <span id="lat-value" class="coord-value">—</span>
   </div>
+
+  <!-- SWITCHER BASEMAP: RADIO BUTTON (alto destra) -->
+  <div class="map-basemap-radios" id="basemap-radios" hidden>
+    <!-- popolato via JS -->
+  </div>
 </div>
 
 <script>
@@ -36,9 +41,14 @@
       opacitySliderId: "opacity"
     });
 
-    // Attiva coordinate live nel box in alto al centro
+    // Coordinate live
     if (map && window.getMouseCoordinates) {
       window.getMouseCoordinates(map, "lon-value", "lat-value");
+    }
+
+    // Inizializza gruppo radio per basemap (stile vecchia mappa)
+    if (window.initBasemapRadios) {
+      window.initBasemapRadios("basemap-radios", window.__MAP_CONFIG__);
     }
   });
 </script>

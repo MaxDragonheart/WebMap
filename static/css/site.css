@@ -26,7 +26,7 @@ main {
   gap: 6px;
   align-items: center;
   background-color: rgba(5, 102, 141, 1) !important; /* stesso blu pulsanti */
-  color: rgba(2, 195, 154, 1) !important;            /* verde testo */
+  color: rgba(2, 195, 154, 1) !important; /* verde testo */
   padding: 4px 8px;
   border-radius: 0;
   box-shadow: 5px 5px 8px 4px rgba(0, 0, 0, 0.2);
@@ -86,7 +86,6 @@ main {
 }
 .ol-scale-line-inner {
   margin: 0 !important;
-  /* ↓ Aggiunta per uniformare lo stile del testo */
   color: rgba(2, 195, 154, 1) !important;
   font-weight: 600;
 }
@@ -199,4 +198,37 @@ main {
 }
 .ol-tooltip-static:before {
   border-top-color: #ffcc33;
+}
+
+/* === Basemap radios (alto destra) === */
+.map-basemap-radios {
+  position: absolute;
+  top: 0.5vh;
+  right: 0.5vw;
+  display: inline-flex;
+  gap: 6px;
+  background-color: rgba(5, 102, 141, 1);
+  color: rgba(2, 195, 154, 1);
+  padding: 4px 6px;
+  border-radius: 0;
+  box-shadow: 5px 5px 8px 4px rgba(0,0,0,0.2);
+  font-size: 12px;
+}
+.map-basemap-radios .bm-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+  user-select: none;
+}
+.map-basemap-radios .bm-item input[type="radio"] {
+  accent-color: rgba(2, 195, 154, 1);
+  cursor: pointer;
+}
+.map-basemap-radios .bm-item span {
+  padding: 0 4px;
+}
+.map-basemap-radios:hover {
+  background-color: rgba(2, 195, 154, 1);
+  color: rgba(5, 102, 141, 1);
 }
