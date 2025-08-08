@@ -1,0 +1,7 @@
+{{/* TEMPLATE PAGINA MAPPA */}}
+{{ define "main" }}
+
+  {{/* Passo al partial sia la pagina che i parametri (Config) */}}
+  {{ partial "map.html" (dict "Page" . "Config" .Params) }}
+
+{{ end }}

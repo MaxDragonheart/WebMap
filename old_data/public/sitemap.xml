@@ -4,11 +4,11 @@
   <url>
     <loc>http://localhost:1313/WebMap/categories/</loc>
   </url><url>
+    <loc>http://localhost:1313/WebMap/maps/</loc>
+  </url><url>
     <loc>http://localhost:1313/WebMap/tags/</loc>
   </url><url>
-    <loc>http://localhost:1313/WebMap/test/napoli/</loc>
-  </url><url>
-    <loc>http://localhost:1313/WebMap/test/</loc>
+    <loc>http://localhost:1313/WebMap/maps/napoli/</loc>
   </url><url>
     <loc>http://localhost:1313/WebMap/</loc>
   </url>
