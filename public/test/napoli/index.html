@@ -42,7 +42,6 @@
   
   <div class="map-basemap" id="bm-root">
     <button type="button" id="bm-btn" class="bm-btn" aria-label="Basemap">
-      
       <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
         <path d="M12 3L1 9l11 6 11-6-11-6zm0 8L1 5v4l11 6 11-6V5l-11 6zm0 4L1 11v4l11 6 11-6v-4l-11 4z" fill="currentColor"/>
       </svg>
@@ -50,6 +49,24 @@
     <div class="bm-panel" id="bm-panel" hidden>
       <div class="bm-title">Basemap</div>
       <ul class="bm-list" id="bm-list"></ul>
+    </div>
+  </div>
+
+  
+  <div class="map-measure" id="ms-root">
+    <button type="button" id="ms-btn" class="ms-btn" aria-label="Misure">
+      <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
+        <path d="M3 17.25V21h3.75l11-11-3.75-3.75-11 11zm2.92 1.83H5.5v-1.42l1.5-1.5 1.42 1.42-1.5 1.5zm2.83-2.83L7.33 14.5l1.5-1.5 1.42 1.42-1.5 1.5zm2.83-2.83l-1.42-1.42 1.5-1.5 1.42 1.42-1.5 1.5zm2.83-2.83l-1.42-1.42 1.5-1.5 1.42 1.42-1.5 1.5z" fill="currentColor"/>
+      </svg>
+    </button>
+    <div class="ms-panel" id="ms-panel" hidden>
+      <div class="ms-title">Strumenti di misura</div>
+      <div class="ms-actions">
+        <button type="button" id="ms-line"  class="ms-action">Distanza</button>
+        <button type="button" id="ms-area"  class="ms-action">Area</button>
+      </div>
+      <div class="ms-sep"></div>
+      <button type="button" id="ms-clear" class="ms-clear">Cancella misure</button>
     </div>
   </div>
 </div>
@@ -70,34 +87,32 @@
     }
 
     
-    const root = document.getElementById("bm-root");
-    const btn  = document.getElementById("bm-btn");
-    const panel = document.getElementById("bm-panel");
-
-    if (window.initBasemapPanel) {
-      window.initBasemapPanel("bm-list", window.__MAP_CONFIG__, function(){
-        
-        panel.hidden = true;
-        root.classList.remove("open");
+    (function(){
+      const root  = document.getElementById("bm-root");
+      const btn   = document.getElementById("bm-btn");
+      const panel = document.getElementById("bm-panel");
+      window.initBasemapPanel && window.initBasemapPanel("bm-list", window.__MAP_CONFIG__, function(){
+        panel.hidden = true; root.classList.remove("open");
       });
-    }
+      btn.addEventListener("click", function(e){
+        e.stopPropagation();
+        const willOpen = panel.hidden;
+        panel.hidden = !willOpen;
+        root.classList.toggle("open", willOpen);
+      });
+      document.addEventListener("click", function(e){
+        if (!root.contains(e.target)) { panel.hidden = true; root.classList.remove("open"); }
+      });
+    })();
 
     
-    btn.addEventListener("click", function (e) {
-      e.stopPropagation();
-      const willOpen = panel.hidden;
-      document.querySelectorAll(".bm-panel").forEach(p => { p.hidden = true; });
-      document.querySelectorAll(".map-basemap").forEach(r => r.classList.remove("open"));
-      panel.hidden = !willOpen;
-      root.classList.toggle("open", willOpen);
-    });
-
-    
-    document.addEventListener("click", function (e) {
-      if (!root.contains(e.target)) {
-        panel.hidden = true;
-        root.classList.remove("open");
-      }
+    window.initMeasureUI && window.initMeasureUI(map, {
+      rootId: "ms-root",
+      toggleBtnId: "ms-btn",
+      panelId: "ms-panel",
+      btnLineId: "ms-line",
+      btnAreaId: "ms-area",
+      btnClearId: "ms-clear"
     });
   });
 </script>

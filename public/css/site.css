@@ -25,13 +25,13 @@ main {
   display: inline-flex;
   gap: 6px;
   align-items: center;
-  background-color: rgba(5, 102, 141, 1) !important; /* stesso blu pulsanti */
-  color: rgba(2, 195, 154, 1) !important; /* verde testo */
+  background-color: rgba(5, 102, 141, 1) !important;
+  color: rgba(2, 195, 154, 1) !important;
   padding: 4px 8px;
   border-radius: 0;
   box-shadow: 5px 5px 8px 4px rgba(0, 0, 0, 0.2);
   font-size: 12px;
-  z-index: 1000; /* sopra ai controlli */
+  z-index: 1000;
   cursor: default;
   user-select: none;
 }
@@ -48,7 +48,7 @@ main {
   color: rgba(5, 102, 141, 1) !important;
 }
 
-/* === Basemap: bottone + pannello === */
+/* === Basemap: bottone + pannello (alto destra) === */
 .map-basemap {
   position: absolute;
   top: 0.5vh;
@@ -70,7 +70,7 @@ main {
 }
 .map-basemap .bm-panel {
   position: absolute;
-  top: 36px;  /* sotto il bottone */
+  top: 36px;
   right: 0;
   min-width: 160px;
   background-color: rgba(5, 102, 141, 1);
@@ -79,18 +79,8 @@ main {
   box-shadow: 5px 5px 8px 4px rgba(0,0,0,0.2);
   padding: 6px 8px;
 }
-.map-basemap.open .bm-panel { /* solo se .open è presente il pannello è visibile (JS setta hidden=false) */
-}
-.bm-title {
-  font-weight: 700;
-  font-size: 12px;
-  margin-bottom: 4px;
-  opacity: 0.9;
-}
-.bm-list {
-  list-style: none;
-  margin: 0; padding: 0;
-}
+.bm-title { font-weight: 700; font-size: 12px; margin-bottom: 4px; opacity: 0.9; }
+.bm-list { list-style: none; margin: 0; padding: 0; }
 .bm-row { margin: 2px 0; }
 .bm-radio {
   display: inline-flex;
@@ -104,6 +94,54 @@ main {
   accent-color: rgba(2, 195, 154, 1);
   cursor: pointer;
 }
+
+/* === Misure: bottone + pannello (sinistra, metà altezza) === */
+.map-measure {
+  position: absolute;
+  left: 0.5vw;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 1000;
+}
+.map-measure .ms-btn {
+  width: 30px; height: 30px;
+  display: grid; place-items: center;
+  background-color: rgba(5, 102, 141, 1);
+  color: rgba(2, 195, 154, 1);
+  border: none; border-radius: 0;
+  box-shadow: 5px 5px 8px 4px rgba(0,0,0,0.2);
+  cursor: pointer;
+}
+.map-measure .ms-btn:hover {
+  background-color: rgba(2, 195, 154, 1);
+  color: rgba(5, 102, 141, 1);
+}
+.map-measure .ms-panel {
+  position: absolute;
+  left: 36px;
+  top: 0;
+  min-width: 180px;
+  background-color: rgba(5, 102, 141, 1);
+  color: rgba(2, 195, 154, 1);
+  border-radius: 0;
+  box-shadow: 5px 5px 8px 4px rgba(0,0,0,0.2);
+  padding: 8px;
+}
+.ms-title { font-weight: 700; font-size: 12px; margin-bottom: 6px; }
+.ms-actions { display: flex; gap: 6px; }
+.ms-action, .ms-clear {
+  background: rgba(2, 195, 154, 1);
+  color: rgba(5, 102, 141, 1);
+  border: none;
+  padding: 4px 8px;
+  font-size: 12px;
+  cursor: pointer;
+}
+.ms-action:hover, .ms-clear:hover {
+  background: rgba(255,215,1);
+  color: rgba(255,140,1);
+}
+.ms-sep { height: 6px; }
 
 /* === Controlli OpenLayers personalizzati === */
 .ol-control {
@@ -214,7 +252,7 @@ main {
   box-shadow: 0 2px 8px rgba(0,0,0,0.15);
 }
 
-/* === Tooltip di misura === */
+/* === Tooltip misure === */
 .ol-tooltip {
   position: relative;
   background: rgba(0, 0, 0, 0.5);

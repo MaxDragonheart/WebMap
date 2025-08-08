@@ -24,6 +24,7 @@
   const Feature = ol.Feature;
   const Point = ol.geom.Point;
   const Polygon = ol.geom.Polygon;
+  const LineString = ol.geom.LineString;
 
   const Style = ol.style.Style;
   const CircleStyle = ol.style.Circle;
@@ -64,12 +65,10 @@
   }
 
   function buildBasemaps(config) {
-    // Supporta sia .basemap singolo, sia .basemaps[]
     let defs = [];
     if (Array.isArray(config.basemaps) && config.basemaps.length > 0) {
       defs = config.basemaps;
     } else {
-      // default sicuri
       defs = [{
         id: "osm",
         name: "OSM",
@@ -85,7 +84,6 @@
 
     const wanted = config.defaultBasemap || defs[0].id;
     const layers = [];
-    // reset
     Object.keys(BASEMAPS).forEach(k => delete BASEMAPS[k]);
 
     defs.forEach(d => {
@@ -198,14 +196,13 @@
     return overlay;
   }
 
-  // ===== API pubbliche utili =====
+  // ===== BASMAP API =====
   function setBasemap(id) {
     Object.keys(BASEMAPS).forEach(key => {
       BASEMAPS[key].setVisible(key === id);
     });
   }
 
-  // Inizializza la lista radio all’interno del pannello a scomparsa
   function initBasemapPanel(listId, cfg, onSelect) {
     const ul = document.getElementById(listId);
     if (!ul) return;
@@ -252,6 +249,7 @@
     });
   }
 
+  // ===== COORDINATE LIVE =====
   function getMouseCoordinates(map, lonId, latId) {
     map.on('pointermove', function (event) {
       const coordinate = toLonLat(event.coordinate);
@@ -264,6 +262,7 @@
     });
   }
 
+  // ===== BBOX & FIT =====
   function createBBoxLayer(bboxCoordinates, bboxName) {
     const coords = [[
       [bboxCoordinates[0], bboxCoordinates[1]],
@@ -287,6 +286,158 @@
     map.getView().fit(extent, { size: map.getSize(), padding, duration });
   }
 
+  // ===== MISURA =====
+  function initMeasureUI(map, ids) {
+    const root = document.getElementById(ids.rootId);
+    const btn  = document.getElementById(ids.toggleBtnId);
+    const panel= document.getElementById(ids.panelId);
+    const btnLine  = document.getElementById(ids.btnLineId);
+    const btnArea  = document.getElementById(ids.btnAreaId);
+    const btnClear = document.getElementById(ids.btnClearId);
+    if (!(root && btn && panel && btnLine && btnArea && btnClear)) return;
+
+    // layer che contiene le misure
+    const measureSource = new VectorSource();
+    const measureLayer = new VectorLayer({
+      source: measureSource,
+      style: new Style({
+        fill: new Fill({ color: 'rgba(255,255,255,0.2)' }),
+        stroke: new Stroke({ color: 'rgba(0, 255, 0, 1.0)', lineDash: [10, 10], width: 2 }),
+        image: new CircleStyle({
+          radius: 5,
+          stroke: new Stroke({ color: 'rgba(0,0,0,0.7)' }),
+          fill: new Fill({ color: 'rgba(255,255,255,0.2)' }),
+        }),
+      }),
+      zIndex: 50
+    });
+    map.addLayer(measureLayer);
+
+    let draw = null;
+    let liveTooltip = null;
+    let liveEl = null;
+    const staticLabels = [];
+
+    function fmtLen(line) {
+      const length = ol.sphere.getLength(line, { projection: map.getView().getProjection() });
+      return length > 100 ? (Math.round(length/10)/100) + ' km'
+                          : (Math.round(length*100)/100) + ' m';
+    }
+    function fmtArea(poly) {
+      const area = ol.sphere.getArea(poly, { projection: map.getView().getProjection() });
+      return area > 10000 ? (Math.round(area/10000)/100) + ' km²'
+                          : (Math.round(area*100)/100) + ' m²';
+    }
+    function makeLiveTooltip() {
+      if (liveEl) liveEl.remove();
+      liveEl = document.createElement('div');
+      liveEl.className = 'ol-tooltip ol-tooltip-measure';
+      liveTooltip = new Overlay({ element: liveEl, offset:[0,-15], positioning:'bottom-center' });
+      map.addOverlay(liveTooltip);
+    }
+    function addStatic(coord, html) {
+      const el = document.createElement('div');
+      el.className = 'ol-tooltip ol-tooltip-static';
+      el.innerHTML = html;
+      const ov = new Overlay({ element: el, offset:[0,-7], positioning:'bottom-center' });
+      ov.setPosition(coord);
+      map.addOverlay(ov);
+      staticLabels.push(ov);
+    }
+    function clearAll() {
+      staticLabels.forEach(o => map.removeOverlay(o));
+      staticLabels.length = 0;
+      if (liveTooltip) map.removeOverlay(liveTooltip);
+      liveTooltip = null;
+      liveEl = null;
+      measureSource.clear();
+      if (draw) {
+        map.removeInteraction(draw);
+        draw = null;
+      }
+    }
+    function start(type) {
+      if (draw) { map.removeInteraction(draw); draw = null; }
+      makeLiveTooltip();
+
+      draw = new ol.interaction.Draw({
+        source: measureSource,
+        type, // 'LineString' | 'Polygon'
+        style: new Style({
+          fill: new Fill({ color: 'rgba(255,255,255,0.2)' }),
+          stroke: new Stroke({ color: 'rgba(0,255,0,1.0)', lineDash:[10,10], width:2 }),
+          image: new CircleStyle({
+            radius:5,
+            stroke: new Stroke({ color:'rgba(0,0,0,0.7)' }),
+            fill: new Fill({ color:'rgba(255,255,255,0.2)' }),
+          }),
+        })
+      });
+      map.addInteraction(draw);
+
+      let key;
+      draw.on('drawstart', function (e) {
+        const geom = e.feature.getGeometry();
+        key = geom.on('change', function (ev) {
+          const g = ev.target;
+          let text, coord;
+          if (g instanceof Polygon) {
+            text = fmtArea(g);
+            coord = g.getInteriorPoint().getCoordinates();
+          } else {
+            text = fmtLen(g);
+            coord = g.getLastCoordinate();
+          }
+          liveEl.innerHTML = text;
+          liveTooltip.setPosition(coord);
+        });
+      });
+
+      draw.on('drawend', function (e) {
+        const g = e.feature.getGeometry();
+        let text, coord;
+        if (g instanceof Polygon) {
+          text = fmtArea(g);
+          coord = g.getInteriorPoint().getCoordinates();
+        } else {
+          text = fmtLen(g);
+          coord = g.getLastCoordinate();
+        }
+        addStatic(coord, text);
+
+        if (liveEl) {
+          liveEl.className = 'ol-tooltip ol-tooltip-static';
+          liveTooltip.setOffset([0,-7]);
+          staticLabels.push(liveTooltip);
+          liveEl = null;
+          liveTooltip = null;
+        }
+        if (key) ol.Observable.unByKey(key);
+        // lascia attivo lo strumento finché l’utente non cambia
+        makeLiveTooltip();
+      });
+    }
+
+    // Toggle pannello
+    btn.addEventListener('click', function (e) {
+      e.stopPropagation();
+      const willOpen = panel.hidden;
+      panel.hidden = !willOpen;
+      root.classList.toggle('open', willOpen);
+    });
+    document.addEventListener('click', function (e) {
+      if (!root.contains(e.target)) {
+        panel.hidden = true;
+        root.classList.remove('open');
+      }
+    });
+
+    // Azioni
+    btnLine.addEventListener('click', function(){ start('LineString'); });
+    btnArea.addEventListener('click', function(){ start('Polygon'); });
+    btnClear.addEventListener('click', function(){ clearAll(); });
+  }
+
   // ===== Factory principale =====
   function createMap(rawConfig, targetId, ids) {
     const config = normalizeConfig(rawConfig);
@@ -307,7 +458,7 @@
       view: new View({ center, zoom })
     });
 
-    // Controlli (stile OL classico; CSS li personalizza)
+    // Controlli OL
     map.addControl(new ZoomControl());
     if (config.controls?.scaleLine) map.addControl(new ScaleLine());
     if (config.controls?.fullscreen) map.addControl(new FullScreen());
@@ -329,4 +480,5 @@
   window.zoomOnLayer = zoomOnLayer;
   window.setBasemap = setBasemap;
   window.initBasemapPanel = initBasemapPanel;
+  window.initMeasureUI = initMeasureUI;
 })();
