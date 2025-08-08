@@ -29,17 +29,31 @@
     <div id="popup-content"></div>
   </div>
   
+
+  
+  <div class="map-top-center" id="map-coords">
+    <span class="coord-label">Lon:</span>
+    <span id="lon-value" class="coord-value">—</span>
+    <span class="sep">|</span>
+    <span class="coord-label">Lat:</span>
+    <span id="lat-value" class="coord-value">—</span>
+  </div>
 </div>
 
 <script>
   window.__MAP_CONFIG__ = "{\"basemap\":{\"attribution\":\"© OpenStreetMap contributors\",\"type\":\"xyz\",\"url\":\"https://{a-c}.tile.openstreetmap.org/{z}/{x}/{y}.png\"},\"center\":[14.251409703644354,40.84578475094159],\"controls\":{\"fullscreen\":true,\"scaleLine\":true,\"slider\":false},\"points\":[{\"coord\":[14.251409703644354,40.84578475094159],\"name\":\"Napoli\"}],\"popup\":{\"content\":\"📍 {name}\\u003cbr\\u003eLon: {lon}, Lat: {lat}\",\"enabled\":true},\"raster\":{\"enabled\":false},\"zoom\":12}";
   document.addEventListener("DOMContentLoaded", function(){
-    window.createMap(window.__MAP_CONFIG__, "map", {
+    const map = window.createMap(window.__MAP_CONFIG__, "map", {
       popupContainerId: "popup",
       popupCloserId: "popup-closer",
       popupContentId: "popup-content",
       opacitySliderId: "opacity"
     });
+
+    
+    if (map && window.getMouseCoordinates) {
+      window.getMouseCoordinates(map, "lon-value", "lat-value");
+    }
   });
 </script>
 

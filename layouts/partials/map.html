@@ -15,16 +15,30 @@
     <div id="popup-content"></div>
   </div>
   {{ end }}
+
+  <!-- BOX COORDINATE: ALTO CENTRO -->
+  <div class="map-top-center" id="map-coords">
+    <span class="coord-label">Lon:</span>
+    <span id="lon-value" class="coord-value">—</span>
+    <span class="sep">|</span>
+    <span class="coord-label">Lat:</span>
+    <span id="lat-value" class="coord-value">—</span>
+  </div>
 </div>
 
 <script>
   window.__MAP_CONFIG__ = {{ .Config | jsonify }};
   document.addEventListener("DOMContentLoaded", function(){
-    window.createMap(window.__MAP_CONFIG__, "map", {
+    const map = window.createMap(window.__MAP_CONFIG__, "map", {
       popupContainerId: "popup",
       popupCloserId: "popup-closer",
       popupContentId: "popup-content",
       opacitySliderId: "opacity"
     });
+
+    // Attiva coordinate live nel box in alto al centro
+    if (map && window.getMouseCoordinates) {
+      window.getMouseCoordinates(map, "lon-value", "lat-value");
+    }
   });
 </script>

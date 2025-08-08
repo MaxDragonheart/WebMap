@@ -16,6 +16,37 @@ main {
   position: relative;
 }
 
+/* === Box coordinate: ALTO CENTRO === */
+.map-top-center {
+  position: absolute;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: inline-flex;
+  gap: 6px;
+  align-items: center;
+  background: #fff;
+  padding: 6px 10px;
+  border-radius: 6px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  font-size: 13px;
+  z-index: 1000; /* sopra ai controlli */
+}
+.map-top-center .coord-label {
+  font-weight: 600;
+  color: #333;
+}
+.map-top-center .coord-value {
+  font-variant-numeric: tabular-nums;
+  min-width: 72px;
+  display: inline-block;
+  text-align: right;
+  color: #111;
+}
+.map-top-center .sep {
+  opacity: 0.5;
+}
+
 /* === Controlli OpenLayers personalizzati === */
 .ol-control {
   background-color: inherit !important;
