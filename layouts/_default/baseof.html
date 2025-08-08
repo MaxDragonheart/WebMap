@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <link rel="icon" href="https://massimilianomoraca.me/static/images/logo.webp" type="image/webp">
+
+  <title>{{ if .Title }}{{ .Title }} – {{ end }}{{ site.Title }}</title>
+  {{ with .Description }}<meta name="description" content="{{ . }}">{{ end }}
+
+  <!-- OpenLayers CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ol@7.3.0/ol.css">
+  <!-- CSS del sito -->
+  <link rel="stylesheet" href="{{ "css/site.css" | relURL }}">
+</head>
+<body>
+  <main>
+    {{ block "main" . }}{{ end }}
+  </main>
+
+  <!-- OpenLayers UMD (ol globale) -->
+  <script src="https://cdn.jsdelivr.net/npm/ol@7.3.0/dist/ol.js"></script>
+  <!-- Factory della mappa -->
+  <script src="{{ "js/map-factory.js" | relURL }}"></script>
+  {{ partial "scripts.html" . }}
+</body>
+</html>

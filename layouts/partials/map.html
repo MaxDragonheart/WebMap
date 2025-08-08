@@ -1,0 +1,30 @@
+<div class="map-wrapper">
+  <div id="map" class="map"></div>
+
+  {{ if .Config.controls.slider }}
+  <div class="map-slider">
+    <label for="opacity">Opacità raster</label>
+    <input id="opacity" type="range" min="0" max="1" step="0.05"
+           value="{{ if .Config.raster.opacity }}{{ .Config.raster.opacity }}{{ else }}1{{ end }}">
+  </div>
+  {{ end }}
+
+  {{ if .Config.popup.enabled }}
+  <div id="popup" class="ol-popup">
+    <a href="#" id="popup-closer" class="ol-popup-closer"></a>
+    <div id="popup-content"></div>
+  </div>
+  {{ end }}
+</div>
+
+<script>
+  window.__MAP_CONFIG__ = {{ .Config | jsonify }};
+  document.addEventListener("DOMContentLoaded", function(){
+    window.createMap(window.__MAP_CONFIG__, "map", {
+      popupContainerId: "popup",
+      popupCloserId: "popup-closer",
+      popupContentId: "popup-content",
+      opacitySliderId: "opacity"
+    });
+  });
+</script>

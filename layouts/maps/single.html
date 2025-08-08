@@ -1,0 +1,5 @@
+{{ define "main" }}
+  {{ $key := .Params.map_config }}
+  {{ $cfg := index site.Data.maps $key }}
+  {{ partial "map.html" (dict "Page" . "Config" $cfg) }}
+{{ end }}

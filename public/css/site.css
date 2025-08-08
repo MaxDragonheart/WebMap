@@ -1,0 +1,57 @@
+/* Reset & layout base */
+html, body {
+  height: 100%;
+}
+body {
+  margin: 0;
+  font-family: system-ui, sans-serif;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Il main occupa tutto lo schermo */
+main {
+  flex: 1;
+  min-height: 100dvh; /* copre l'intera viewport, anche su mobile */
+  display: flex;
+}
+
+/* Wrapper e mappa si espandono completamente */
+.map-wrapper {
+  position: relative;
+  flex: 1;
+  min-height: 100%;
+}
+.map {
+  width: 100%;
+  height: 100%;
+}
+
+/* Slider opzionale (se presente) */
+.map-slider {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background: #fff;
+  padding: 8px;
+  border-radius: 6px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+}
+
+/* Popup OpenLayers */
+.ol-popup {
+  position: absolute;
+  background: #fff;
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  bottom: 12px;
+  left: -50px;
+  min-width: 180px;
+}
+.ol-popup-closer {
+  position: absolute;
+  top: 2px;
+  right: 8px;
+  text-decoration: none;
+}

@@ -1,0 +1,26 @@
+center: [14.251409703644354, 40.84578475094159]  # [lon, lat]
+zoom: 12
+
+basemap:
+  type: xyz
+  url: "https://{a-c}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+  attribution: "© OpenStreetMap contributors"
+
+raster:
+  enabled: false
+
+controls:
+  slider: false      # per il test non serve
+  scaleLine: true
+  fullscreen: true
+
+popup:
+  enabled: true
+  content: "📍 {name}<br>Lon: {lon}, Lat: {lat}"
+
+# NUOVO: elenco punti (puoi aggiungerne altri in futuro)
+points:
+  - name: "Napoli"
+    coord: [14.251409703644354, 40.84578475094159]  # [lon, lat]
+    # (opzionale) popup custom solo per questo feature:
+    # popup: "Napoli – centro storico"
