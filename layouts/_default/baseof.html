@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <link rel="icon" href="https://massimilianomoraca.me/static/images/logo.webp" type="image/webp">
+  <title>{{ .Title }} · {{ site.Title }}</title>
+
+  <!-- OpenLayers CSS (CDN) -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ol/ol.css">
+
+  <!-- Stili locali -->
+  {{ $mapcss := resources.Get "css/map.css" | resources.Minify | resources.Fingerprint }}
+  <link rel="stylesheet" href="{{ $mapcss.RelPermalink }}">
+</head>
+<body>
+  <main class="container">
+    {{ block "main" . }}{{ end }}
+  </main>
+
+  <!-- OpenLayers JS (CDN) -->
+  <script src="https://cdn.jsdelivr.net/npm/ol/dist/ol.js"></script>
+
+  <!-- Script locali (assets/js -> Hugo Pipes) -->
+  {{ partial "map/scripts.html" . }}
+</body>
+</html>

@@ -1,0 +1,27 @@
+{{ define "main" }}
+<section class="map-page">
+  <h1>{{ .Title }}</h1>
+
+  <!-- Contenitore mappa -->
+  <div id="map" class="map-container"></div>
+
+  <!-- UI comuni -->
+  <div class="map-ui top-left">
+    {{ partial "map/controls.html" . }}
+  </div>
+
+  <div class="map-ui bottom-left">
+    {{ partial "map/coords.html" . }}
+  </div>
+
+  <div class="map-ui top-right">
+    {{ partial "map/basemap-picker.html" . }}
+  </div>
+
+  <!-- Bootstrap della mappa via JS con dati da /data/maps/<slug>.yaml -->
+  <script>
+    window.__MAP_CONFIG__ = {{ (index site.Data.maps (.File.TranslationBaseName | default .File.BaseFileName)) | jsonify }};
+    window.__MAP_TITLE__  = {{ .Title | jsonify }};
+  </script>
+</section>
+{{ end }}

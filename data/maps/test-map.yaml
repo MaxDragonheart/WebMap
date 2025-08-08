@@ -1,0 +1,16 @@
+view:
+  center: [14.2681, 40.8518] # Napoli
+  zoom: 12
+
+basemaps:
+  - type: osm
+    title: "OpenStreetMap"
+    visible: true
+  - type: stamen-toner
+    title: "Stamen Toner"
+    visible: false
+  - type: xyz
+    title: "Carto Light"
+    url: "https://cartodb-basemaps-a.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png"
+    attribution: "&copy; Carto"
+    visible: false

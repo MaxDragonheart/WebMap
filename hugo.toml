@@ -1,0 +1,14 @@
+baseURL = "/"
+languageCode = "it-it"
+title = "WebMap"
+enableRobotsTXT = true
+disableKinds = ["taxonomy", "term", "RSS", "sitemap"] # li riattiveremo se servono
+
+[markup.goldmark.renderer]
+unsafe = true
+
+[params]
+  appName = "WebMap"
+
+[permalinks]
+  maps = "/maps/:slug/"
