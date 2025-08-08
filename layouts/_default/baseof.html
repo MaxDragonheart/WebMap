@@ -6,22 +6,21 @@
   <link rel="icon" href="https://massimilianomoraca.me/static/images/logo.webp" type="image/webp">
   <title>{{ .Title }} · {{ site.Title }}</title>
 
-  <!-- OpenLayers CSS (CDN) -->
+  <!-- OpenLayers CSS -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ol/ol.css">
 
   <!-- Stili locali -->
-  {{ $mapcss := resources.Get "css/map.css" | resources.Minify | resources.Fingerprint }}
+  {{ $mapcss := resources.Get "css/map.css" }}
   <link rel="stylesheet" href="{{ $mapcss.RelPermalink }}">
 </head>
 <body>
-  <main class="container">
-    {{ block "main" . }}{{ end }}
-  </main>
+  {{ block "main" . }}{{ end }}
 
-  <!-- OpenLayers JS (CDN) -->
+  <!-- OpenLayers JS -->
   <script src="https://cdn.jsdelivr.net/npm/ol/dist/ol.js"></script>
 
-  <!-- Script locali (assets/js -> Hugo Pipes) -->
-  {{ partial "map/scripts.html" . }}
+  <!-- Script locali (no minify) con cache-buster -->
+  {{ $v := now.Unix }}
+  {{ partial "map/scripts.html" (dict "ctx" . "v" $v) }}
 </body>
 </html>

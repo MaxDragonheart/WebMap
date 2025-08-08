@@ -1,44 +1,47 @@
-// Core v3 (DEBUG): legge la config da window.__MAP_CONFIG__, parse se stringa
+// Core v4: legge la config, crea mappa full-screen e MONTA i controlli custom via JS
 window.WebMap = (function () {
-  console.log("%c[core v3] loaded", "background:#222;color:#0f0;padding:2px 6px;border-radius:3px");
-
+  // --- utils config ---
   function safeParseMaybe(str) {
     if (typeof str !== "string") return str;
-    try { return JSON.parse(str); } catch (e) { console.warn("[core v3] JSON parse fallita:", e, str); return {}; }
+    try { return JSON.parse(str); } catch { return {}; }
   }
-
   function getConfig() {
     var raw = (typeof window !== "undefined") ? window.__MAP_CONFIG__ : {};
-    var cfg = safeParseMaybe(raw) || {};
-    return cfg;
+    return safeParseMaybe(raw) || {};
   }
 
+  // --- view ---
   function createView() {
     var cfg = getConfig();
     var hasCenter = cfg && cfg.view && Array.isArray(cfg.view.center) && cfg.view.center.length === 2;
     var hasZoom   = cfg && cfg.view && typeof cfg.view.zoom === "number";
-
     var centerLonLat = hasCenter ? cfg.view.center : [12.4964, 41.9028];
     var zoomVal      = hasZoom   ? cfg.view.zoom   : 12;
 
-    console.log("[core v3] createView:", { center: centerLonLat, zoom: zoomVal, hasCenter, hasZoom });
     return new ol.View({
       center: ol.proj.fromLonLat([parseFloat(centerLonLat[0]), parseFloat(centerLonLat[1])]),
       zoom: zoomVal
     });
   }
 
-  function basemapFromConfig(base, idx) {
-    console.log("[core v3] basemapFromConfig", idx, base);
+  // --- basemaps ---
+  function basemapFromConfig(base) {
     if (!base || !base.type) return null;
 
     if (base.type === "osm") {
-      return new ol.layer.Tile({ title: base.title || "OpenStreetMap", source: new ol.source.OSM(), visible: !!base.visible });
+      return new ol.layer.Tile({
+        title: base.title || "OpenStreetMap",
+        source: new ol.source.OSM(),
+        visible: !!base.visible
+      });
     }
     if (base.type === "stamen-toner") {
       return new ol.layer.Tile({
         title: base.title || "Stamen Toner",
-        source: new ol.source.XYZ({ url: "https://stamen-tiles.a.ssl.fastly.net/toner/{z}/{x}/{y}.png", attributions: "Stamen" }),
+        source: new ol.source.XYZ({
+          url: "https://stamen-tiles.a.ssl.fastly.net/toner/{z}/{x}/{y}.png",
+          attributions: "Stamen"
+        }),
         visible: !!base.visible
       });
     }
@@ -49,7 +52,6 @@ window.WebMap = (function () {
         visible: !!base.visible
       });
     }
-    console.warn("[core v3] tipo non gestito o url mancante", base);
     return null;
   }
 
@@ -63,49 +65,99 @@ window.WebMap = (function () {
 
   function buildBasemapGroup() {
     var cfg = getConfig();
-    console.log("[core v3] raw basemaps =", cfg ? cfg.basemaps : undefined, "type:", typeof (cfg && cfg.basemaps));
-
     var list = normalizeBasemaps(cfg && cfg.basemaps);
-    console.log("[core v3] normalized basemaps length =", list.length);
-
     var layers = [];
     for (var i = 0; i < list.length; i++) {
-      var lyr = basemapFromConfig(list[i], i);
+      var lyr = basemapFromConfig(list[i]);
       if (lyr) layers.push(lyr);
     }
-
     if (layers.length === 0) {
-      console.warn("[core v3] No basemaps: inject OSM fallback");
       layers.push(new ol.layer.Tile({ title: "OSM (fallback)", source: new ol.source.OSM(), visible: true }));
     }
+    return new ol.layer.Group({ title: "Basemaps", layers: layers });
+  }
 
-    var group = new ol.layer.Group({ title: "Basemaps", layers: layers });
-    console.log("[core v3] BasemapGroup layers:",
-      group.getLayers().getArray().map(function (l) { return { title: l.get("title"), visible: l.getVisible() }; })
-    );
-    return group;
+  // --- controlli custom montati via JS (evita che OL li rimuova) ---
+  function mountStatusBarControl(map) {
+    var wrap = document.createElement("div");
+    wrap.className = "ol-control status-bar";
+    // coord
+    var coords = document.createElement("span");
+    coords.id = "coords";
+    coords.textContent = "Lon: —  Lat: —";
+    // scale line target
+    var scale = document.createElement("div");
+    scale.id = "scale-line";
+    wrap.appendChild(coords);
+    wrap.appendChild(scale);
+    map.addControl(new ol.control.Control({ element: wrap }));
+    // aggiungo il vero ScaleLine puntando al div
+    map.addControl(new ol.control.ScaleLine({ target: scale }));
+  }
+
+  function mountResetControl(map) {
+    var wrap = document.createElement("div");
+    wrap.className = "ol-control reset-control";
+    var btn = document.createElement("button");
+    btn.id = "reset-btn";
+    btn.type = "button";
+    btn.title = "Reset view";
+    btn.textContent = "↺";
+    wrap.appendChild(btn);
+    map.addControl(new ol.control.Control({ element: wrap }));
+  }
+
+  function mountBasemapPickerControl(map) {
+    var wrap = document.createElement("div");
+    wrap.className = "ol-control basemap-control";
+    // toggle
+    var toggle = document.createElement("button");
+    toggle.id = "basemap-toggle";
+    toggle.type = "button";
+    toggle.setAttribute("aria-expanded", "false");
+    toggle.textContent = "Basemap ▾";
+    // menu
+    var menu = document.createElement("div");
+    menu.id = "basemap-menu";
+    menu.className = "menu hidden";
+    menu.setAttribute("aria-hidden", "true");
+
+    wrap.appendChild(toggle);
+    wrap.appendChild(menu);
+    map.addControl(new ol.control.Control({ element: wrap }));
   }
 
   function createMap(targetId) {
     var view = createView();
     var basemapGroup = buildBasemapGroup();
 
-    var map = new ol.Map({ target: targetId, layers: [basemapGroup], view: view });
+    // controlli core espliciti
+    var controls = [
+      new ol.control.Zoom(),
+      new ol.control.Attribution({ collapsible: true })
+    ];
 
+    var map = new ol.Map({
+      target: targetId,
+      layers: [basemapGroup],
+      view: view,
+      controls: controls
+    });
+
+    // Monta i nostri controlli DOPO che OL ha creato il suo DOM
+    mountStatusBarControl(map);
+    mountResetControl(map);
+    mountBasemapPickerControl(map);
+
+    // se nessun basemap è visibile, accendo il primo
     var anyVisible = basemapGroup.getLayers().getArray().some(function (l) { return l.getVisible(); });
     if (!anyVisible && basemapGroup.getLayers().getLength() > 0) {
       basemapGroup.getLayers().item(0).setVisible(true);
-      console.log("[core v3] Forced visible on first basemap.");
     }
 
     setTimeout(function () { map.updateSize(); }, 0);
     return { map: map, basemapGroup: basemapGroup };
   }
 
-  return { createMap: createMap, currentScale: function (map) {
-    var resolution = map.getView().getResolution();
-    var dpi = 25.4 / 0.28;
-    var mpu = ol.proj.get(map.getView().getProjection()).getMetersPerUnit();
-    return Math.round(resolution * mpu * 39.37 * dpi);
-  }};
+  return { createMap: createMap };
 })();

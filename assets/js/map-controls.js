@@ -1,42 +1,29 @@
-// Controls: zoom/pan/scale/coords
-(function () {
-  function bindZoom(map) {
-    document.getElementById("zoom-in")?.addEventListener("click", () => {
-      map.getView().animate({ zoom: map.getView().getZoom() + 1, duration: 200 });
-    });
-    document.getElementById("zoom-out")?.addEventListener("click", () => {
-      map.getView().animate({ zoom: map.getView().getZoom() - 1, duration: 200 });
-    });
-  }
+// Controlli: reset, coords + scala nel box centrale
+window.WebMapControls = (function () {
+  function bindReset(map, cfg) {
+    var btn = document.getElementById("reset-btn");
+    if (!btn) return;
+    var center = (cfg && cfg.view && Array.isArray(cfg.view.center)) ? cfg.view.center : [12.4964, 41.9028];
+    var zoom   = (cfg && cfg.view && typeof cfg.view.zoom === "number") ? cfg.view.zoom : 12;
 
-  function bindPanReset(map, cfg) {
-    document.getElementById("pan-reset")?.addEventListener("click", () => {
-      const c = (cfg?.view?.center || [12.4964, 41.9028]);
-      const z = (cfg?.view?.zoom ?? 12);
-      map.getView().animate({ center: ol.proj.fromLonLat(c), zoom: z, duration: 250 });
+    btn.addEventListener("click", function () {
+      map.getView().animate({
+        center: ol.proj.fromLonLat([parseFloat(center[0]), parseFloat(center[1])]),
+        zoom: zoom,
+        duration: 200
+      });
     });
   }
 
-  function bindCoordsAndScale(map) {
-    const lonEl = document.getElementById("lon");
-    const latEl = document.getElementById("lat");
-    const scaleEl = document.getElementById("scale");
-
-    map.on("pointermove", (evt) => {
-      const lonlat = ol.proj.toLonLat(evt.coordinate);
-      if (lonEl && latEl) {
-        lonEl.textContent = lonlat[0].toFixed(5);
-        latEl.textContent = lonlat[1].toFixed(5);
-      }
+  function bindCoords(map) {
+    var el = document.getElementById("coords");
+    if (!el) return;
+    map.on("pointermove", function (evt) {
+      var lonlat = ol.proj.toLonLat(evt.coordinate);
+      if (!lonlat) return;
+      el.textContent = "Lon: " + lonlat[0].toFixed(5) + "  Lat: " + lonlat[1].toFixed(5);
     });
-
-    function updateScale() {
-      if (!scaleEl) return;
-      scaleEl.textContent = "1:" + WebMap.currentScale(map).toLocaleString();
-    }
-    updateScale();
-    map.getView().on("change:resolution", updateScale);
   }
 
-  window.WebMapControls = { bindZoom, bindPanReset, bindCoordsAndScale };
+  return { bindReset: bindReset, bindCoords: bindCoords };
 })();

@@ -1,33 +1,110 @@
-:root { --ui-bg:#111827; --ui-fg:#e5e7eb; --ui-accent:#22c55e; --ui-muted:#374151; }
-
-html, body, main { height:100%; margin:0; }
-.container { height:100%; display:flex; flex-direction:column; }
-.map-page { flex:1; display:flex; flex-direction:column; gap:0.5rem; padding:0.5rem; }
-.map-container { flex:1; min-height:480px; position:relative; border:1px solid var(--ui-muted); border-radius:10px; overflow:hidden; }
-
-.map-ui { position:absolute; z-index:10; display:flex; gap:0.5rem; }
-.top-left { top:0.75rem; left:0.75rem; }
-.top-right { top:0.75rem; right:0.75rem; }
-.bottom-left { bottom:0.75rem; left:0.75rem; }
-
-.controls button, .basemap-picker button {
-  background:var(--ui-bg); color:var(--ui-fg); border:1px solid var(--ui-muted);
-  padding:0.35rem 0.6rem; border-radius:8px; cursor:pointer;
-}
-.controls button:hover, .basemap-picker button:hover { border-color:var(--ui-accent); }
-
-.coords {
-  background:var(--ui-bg); color:var(--ui-fg); border:1px solid var(--ui-muted);
-  padding:0.35rem 0.6rem; border-radius:8px; display:flex; gap:0.75rem;
+/* ====== Layout full screen ====== */
+html, body {
+  height: 100%;
+  margin: 0;
 }
 
-.basemap-picker .menu {
-  position:absolute; right:0; top:2.4rem; background:var(--ui-bg); color:var(--ui-fg);
-  border:1px solid var(--ui-muted); border-radius:10px; padding:0.25rem; min-width:180px;
+#map.map-container {
+  position: fixed;
+  inset: 0;              /* top:0 right:0 bottom:0 left:0 */
+  width: 100%;
+  height: 100%;
 }
-.basemap-picker .menu.hidden { display:none; }
-.basemap-picker .menu button {
-  width:100%; text-align:left; margin:0; display:block;
-  background:transparent; border:none; padding:0.4rem 0.6rem; border-radius:8px;
+
+/* Arrotondo leggermente gli angoli della mappa per estetica */
+#map.map-container {
+  border-radius: 8px;
+  overflow: hidden;
 }
-.basemap-picker .menu button:hover { background:#1f2937; }
+
+/* ====== Controlli OpenLayers ====== */
+/* Sposto attribution in basso-sinistra */
+.ol-attribution {
+  bottom: 8px;
+  left: 8px;
+  right: auto;
+}
+
+/* Reset sotto ai bottoni zoom default (si impila automaticamente) */
+.reset-control {
+  top: calc(0.5em + 70px); /* circa l'altezza del blocco .ol-zoom */
+  left: 0.5em;
+}
+.reset-control button {
+  padding: 6px 10px;
+  font-size: 16px;
+  background: #0b1c2c;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.reset-control button:hover { opacity: 0.9; }
+
+/* ====== Basemap picker (alto-dx dentro la mappa) ====== */
+.basemap-control {
+  position: absolute;
+  top: 0.5em;
+  right: 0.5em;
+}
+.basemap-control #basemap-toggle {
+  background: #0b1c2c;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 6px 10px;
+  cursor: pointer;
+}
+.basemap-control .menu {
+  position: absolute;
+  right: 0;
+  margin-top: 6px;
+  background: #0b1c2c;
+  color: #fff;
+  border-radius: 6px;
+  padding: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  z-index: 10;
+}
+.basemap-control .menu.hidden { display: none; }
+.basemap-control .menu button {
+  background: transparent;
+  color: #fff;
+  border: 1px solid #2a3a4a;
+  border-radius: 4px;
+  padding: 6px 8px;
+  text-align: left;
+  cursor: pointer;
+}
+.basemap-control .menu button:hover { background: #162636; }
+
+/* ====== Status bar (basso centro) ====== */
+.status-bar {
+  position: absolute;
+  left: 50%;
+  bottom: 8px;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(11,28,44,0.9);
+  color: #fff;
+  padding: 6px 10px;
+  border-radius: 6px;
+  font: 12px/1.2 system-ui, sans-serif;
+}
+.status-bar #scale-line {
+  min-width: 140px;
+}
+.status-bar .ol-scale-line {
+  background: transparent;
+  border: none;
+  margin: 0;
+}
+.status-bar .ol-scale-line-inner {
+  border: 2px solid #fff;
+  border-top: none;
+  color: #fff;
+}

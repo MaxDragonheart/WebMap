@@ -1,42 +1,35 @@
 {{ define "main" }}
-<section class="map-page">
-  <h1>{{ .Title }}</h1>
+<!-- Mappa full-screen -->
+<div id="map" class="map-container">
 
-  <!-- Contenitore mappa -->
-  <div id="map" class="map-container"></div>
-
-  <!-- UI comuni -->
-  <div class="map-ui top-left">
-    {{ partial "map/controls.html" . }}
+  <!-- Basemap picker (alto-dx, dentro la mappa) -->
+  <div id="basemap-control" class="ol-control basemap-control">
+    <button id="basemap-toggle" type="button" aria-expanded="false">Basemap ▾</button>
+    <div id="basemap-menu" class="menu hidden" aria-hidden="true"></div>
   </div>
 
-  <div class="map-ui bottom-left">
-    {{ partial "map/coords.html" . }}
+  <!-- Status bar (basso-centro): coord + barra di scala -->
+  <div id="status-bar" class="status-bar">
+    <span id="coords">Lon: —  Lat: —</span>
+    <div id="scale-line"></div>
   </div>
 
-  <div class="map-ui top-right">
-    {{ partial "map/basemap-picker.html" . }}
+  <!-- Reset (sotto ai bottoni di zoom di OpenLayers) -->
+  <div id="reset-control" class="ol-control reset-control">
+    <button id="reset-btn" type="button" title="Reset view">↺</button>
   </div>
 
-  <!-- Bootstrap della mappa via JS -->
-  {{ $basename := .File.TranslationBaseName | default .File.BaseFileName }}
-  {{ $k1 := $basename }}
-  {{ $k2 := printf "%s-map" $basename }}
-  {{ $k3 := printf "%s_map" $basename }}
+</div>
 
-  {{ $cfg := or (index site.Data.maps $k1) (index site.Data.maps $k2) (index site.Data.maps $k3) }}
+<!-- Passo la config dal data -->
+{{ $basename := .File.TranslationBaseName | default .File.BaseFileName }}
+{{ $k1 := $basename }}
+{{ $k2 := printf "%s-map" $basename }}
+{{ $k3 := printf "%s_map" $basename }}
+{{ $cfg := or (index site.Data.maps $k1) (index site.Data.maps $k2) (index site.Data.maps $k3) }}
 
-  <script>
-    window.__MAP_CONFIG__ = {{ $cfg | jsonify }};
-    window.__MAP_TITLE__  = {{ .Title | jsonify }};
-    console.log("MAP_CONFIG lookup:", {
-      basename: {{ $basename | jsonify }},
-      tried_keys: [{{ $k1 | jsonify }}, {{ $k2 | jsonify }}, {{ $k3 | jsonify }}],
-      found: window.__MAP_CONFIG__
-    });
-    if (!window.__MAP_CONFIG__) {
-      console.warn("⚠️ Nessuna configurazione mappa trovata in /data/maps/. Verifica il nome file YAML.");
-    }
-  </script>
-</section>
+<script>
+  window.__MAP_CONFIG__ = {{ $cfg | jsonify }};
+  window.__MAP_TITLE__  = {{ .Title | jsonify }};
+</script>
 {{ end }}

@@ -1,14 +1,10 @@
-{{ $v := now.Unix }} <!-- cache-buster -->
-
+{{/* Carico gli asset JS senza minify. Uso cache-buster passato dal baseof. */}}
 {{ $core     := resources.Get "js/map-core.js" }}
 {{ $controls := resources.Get "js/map-controls.js" }}
 {{ $bases    := resources.Get "js/map-basemaps.js" }}
+{{ $init     := resources.Get "js/map-init.js" }}
 
-<script src="{{ $core.RelPermalink }}?v={{ $v }}"></script>
-<script src="{{ $controls.RelPermalink }}?v={{ $v }}"></script>
-<script src="{{ $bases.RelPermalink }}?v={{ $v }}"></script>
-
-{{ if and .IsPage (or (eq .Section "maps") (eq .Type "maps")) }}
-  {{ $init := resources.Get "js/map-init.js" }}
-  <script src="{{ $init.RelPermalink }}?v={{ $v }}"></script>
-{{ end }}
+<script src="{{ $core.RelPermalink }}?v={{ .v }}"></script>
+<script src="{{ $controls.RelPermalink }}?v={{ .v }}"></script>
+<script src="{{ $bases.RelPermalink }}?v={{ .v }}"></script>
+<script src="{{ $init.RelPermalink }}?v={{ .v }}"></script>
