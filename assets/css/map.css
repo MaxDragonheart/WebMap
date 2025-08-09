@@ -82,7 +82,7 @@ html, body {
     z-index:3;
 }
 .scale-bar-container .ol-scale-line{
-    background: var(--c-bg); !important;
+    background: var(--c-bg) !important;
     margin:0 !important;
     box-shadow:none !important;
 }
