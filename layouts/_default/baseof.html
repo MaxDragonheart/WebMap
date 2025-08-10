@@ -9,24 +9,19 @@
   <!-- OpenLayers CSS -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ol/ol.css">
 
-  <!-- CSS generici -->
+  <!-- CSS progetto (solo quelli effettivamente usati) -->
   {{ $olcustom := resources.Get "css/ol_custom.css" }}
-  {{ $measure  := resources.Get "css/measure.css" }}
-  {{ $mapcss   := resources.Get "css/map.css" }}
+  {{ $mapcss  := resources.Get "css/map.css" }}
   <link rel="stylesheet" href="{{ $olcustom.RelPermalink }}">
-  <link rel="stylesheet" href="{{ $measure.RelPermalink }}">
   <link rel="stylesheet" href="{{ $mapcss.RelPermalink }}">
-
-  <!-- Slot per CSS specifici della pagina/mappa -->
-  {{ block "head_extra" . }}{{ end }}
 </head>
 <body>
   {{ block "main" . }}{{ end }}
 
-  <!-- OpenLayers JS (globale: window.ol) -->
+  <!-- OpenLayers JS (globale: window.ol) — una sola volta -->
   <script src="https://cdn.jsdelivr.net/npm/ol/dist/ol.js"></script>
 
-  <!-- Script locali (no minify) -->
+  <!-- Script locali -->
   {{ partial "map/scripts.html" . }}
 </body>
 </html>
