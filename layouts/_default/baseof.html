@@ -10,10 +10,8 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ol/ol.css">
 
   <!-- I TUOI CSS -->
-  {{ $geomedia := resources.Get "css/geomedia.css" }}
   {{ $olcustom := resources.Get "css/ol_custom.css" }}
   {{ $measure  := resources.Get "css/measure.css" }}
-  <link rel="stylesheet" href="{{ $geomedia.RelPermalink }}">
   <link rel="stylesheet" href="{{ $olcustom.RelPermalink }}">
   <link rel="stylesheet" href="{{ $measure.RelPermalink }}">
 
