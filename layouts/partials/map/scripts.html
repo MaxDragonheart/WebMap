@@ -31,11 +31,9 @@
       if (fTBase) candidates.push(fTBase);
       if (fBase)  candidates.push(fBase);
 
-      // Normalizzazioni tipiche
       function urlize(s){ return (s||"").toString().trim().toLowerCase().replace(/\s+/g,'-'); }
       candidates = candidates.concat(candidates.map(urlize));
 
-      // 3) Risolvi la config migliore
       var dataMaps = window.__DATA_MAPS__ || {};
       var picked = null, pickedKey = null;
       for (var i=0; i<candidates.length; i++) {
@@ -44,7 +42,6 @@
       }
 
       if (sect === "maps" && !picked && dataMaps.hasOwnProperty("test")) {
-        // fallback "amichevole" durante lo sviluppo
         picked = dataMaps["test"]; pickedKey = "test";
       }
 
@@ -57,6 +54,7 @@
       }
 
       window.__MAP_TITLE__ = title;
+      window.__MAP_SLUG__  = pSlug || fTBase || fBase || "";
     } catch(e){
       console.error("[scripts] Errore preparando __MAP_CONFIG__:", e);
       window.__MAP_CONFIG__ = {};
@@ -64,13 +62,41 @@
   })();
 </script>
 
-{{/* JS locali generici */}}
+{{/* CSS e JS core condivisi */}}
+{{ $corecss := resources.Get "css/ol_custom.css" }}
+{{ $mapcss  := resources.Get "css/map.css" }}
+<link rel="stylesheet" href="{{ $corecss.RelPermalink }}">
+<link rel="stylesheet" href="{{ $mapcss.RelPermalink }}">
+
 {{ $core := resources.Get "js/map-core.js" }}
 {{ $init := resources.Get "js/map-init.js" }}
 <script src="{{ $core.RelPermalink }}?v={{ now.Unix }}"></script>
 <script src="{{ $init.RelPermalink }}?v={{ now.Unix }}"></script>
 
-{{/* JS specifici della pagina (se presenti nel bundle della mappa) */}}
+{{/* === PER-MAPPA: dalla stessa cartella di index.md (page bundle) === */}}
+{{ $slugGuess := "" }}
+{{ if .Params.slug }}
+  {{ $slugGuess = .Params.slug }}
+{{ else if .File }}
+  {{ $slugGuess = or .File.TranslationBaseName .File.BaseFileName }}
+{{ end }}
+
+{{/* CSS specifici: prima "map*.css", poi "<slug>.css" */}}
+{{ with .Resources.GetMatch "map*.css" }}
+  <link rel="stylesheet" href="{{ .RelPermalink }}?v={{ now.Unix }}">
+{{ end }}
+{{ if $slugGuess }}
+  {{ with .Resources.GetMatch (printf "%s.css" $slugGuess) }}
+    <link rel="stylesheet" href="{{ .RelPermalink }}?v={{ now.Unix }}">
+  {{ end }}
+{{ end }}
+
+{{/* JS specifici: prima "map*.js", poi "<slug>.js" */}}
 {{ with .Resources.GetMatch "map*.js" }}
   <script src="{{ .RelPermalink }}?v={{ now.Unix }}"></script>
+{{ end }}
+{{ if $slugGuess }}
+  {{ with .Resources.GetMatch (printf "%s.js" $slugGuess) }}
+    <script src="{{ .RelPermalink }}?v={{ now.Unix }}"></script>
+  {{ end }}
 {{ end }}
