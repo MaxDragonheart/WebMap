@@ -9,15 +9,16 @@
   <!-- OpenLayers CSS -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ol/ol.css">
 
-  <!-- I TUOI CSS -->
+  <!-- CSS generici -->
   {{ $olcustom := resources.Get "css/ol_custom.css" }}
   {{ $measure  := resources.Get "css/measure.css" }}
+  {{ $mapcss   := resources.Get "css/map.css" }}
   <link rel="stylesheet" href="{{ $olcustom.RelPermalink }}">
   <link rel="stylesheet" href="{{ $measure.RelPermalink }}">
-
-  <!-- CSS della mappa -->
-  {{ $mapcss := resources.Get "css/map.css" }}
   <link rel="stylesheet" href="{{ $mapcss.RelPermalink }}">
+
+  <!-- Slot per CSS specifici della pagina/mappa -->
+  {{ block "head_extra" . }}{{ end }}
 </head>
 <body>
   {{ block "main" . }}{{ end }}

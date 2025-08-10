@@ -4,6 +4,7 @@
   function getConfig() {
     var raw = (typeof window !== "undefined") ? window.__MAP_CONFIG__ : {};
     if (typeof raw === "string") { try { raw = JSON.parse(raw); } catch(e) { raw = {}; } }
+    console.log("[core] cfg letto:", raw);
     return raw || {};
   }
 
@@ -14,36 +15,63 @@
       var bm = list[i];
       var layer = null;
       if (bm.type === "osm") {
-        layer = new ol.layer.Tile({ title: bm.title || "OpenStreetMap", source: new ol.source.OSM(), visible: !!bm.visible });
+        layer = new ol.layer.Tile({
+          title: bm.title || "OpenStreetMap",
+          source: new ol.source.OSM(),
+          visible: !!bm.visible
+        });
       } else if (bm.type === "stamen-toner") {
         layer = new ol.layer.Tile({
           title: bm.title || "Stamen Toner",
-          source: new ol.source.XYZ({ url: "https://stamen-tiles.a.ssl.fastly.net/toner/{z}/{x}/{y}.png", attributions: "Stamen" }),
+          source: new ol.source.XYZ({
+            url: "https://stamen-tiles.a.ssl.fastly.net/toner/{z}/{x}/{y}.png",
+            attributions: "Stamen"
+          }),
           visible: !!bm.visible
         });
       } else if (bm.type === "xyz" && bm.url) {
         layer = new ol.layer.Tile({
           title: bm.title || "XYZ",
-          source: new ol.source.XYZ({ url: bm.url, attributions: bm.attribution || "" }),
+          source: new ol.source.XYZ({
+            url: bm.url,
+            attributions: bm.attribution || ""
+          }),
           visible: !!bm.visible
         });
       }
       if (layer) layers.push(layer);
     }
     if (layers.length === 0) {
+      console.warn("[core] Nessun basemap dal YAML. Inject OSM fallback.");
       layers.push(new ol.layer.Tile({ title: "OSM (fallback)", source: new ol.source.OSM(), visible: true }));
     }
     return layers;
   }
 
+  function parseCenter(cfg) {
+    var def = [12.4964, 41.9028]; // Roma fallback
+    if (!cfg.view || !Array.isArray(cfg.view.center)) return def;
+    var c = cfg.view.center;
+    if (c.length !== 2) return def;
+    var lon = Number(c[0]), lat = Number(c[1]);
+    if (!isFinite(lon) || !isFinite(lat)) return def;
+    return [lon, lat]; // atteso lon,lat
+  }
+
+  function parseZoom(cfg) {
+    var z = (cfg.view && typeof cfg.view.zoom === "number") ? cfg.view.zoom : 12;
+    return isFinite(z) ? z : 12;
+  }
+
   function createMap(targetId) {
     var cfg = getConfig();
 
-    var centerLonLat = (cfg.view && Array.isArray(cfg.view.center)) ? cfg.view.center : [12.4964, 41.9028];
-    var zoomVal      = (cfg.view && typeof cfg.view.zoom === "number") ? cfg.view.zoom : 12;
+    var centerLonLat = parseCenter(cfg);
+    var zoomVal      = parseZoom(cfg);
+    console.log("[core] view da cfg -> center:", centerLonLat, "zoom:", zoomVal);
 
     var view = new ol.View({
-      center: ol.proj.fromLonLat([parseFloat(centerLonLat[0]), parseFloat(centerLonLat[1])]),
+      center: ol.proj.fromLonLat([centerLonLat[0], centerLonLat[1]]),
       zoom: zoomVal
     });
 
@@ -59,13 +87,13 @@
       ]
     });
 
-    // ---- Barra di scala in basso-centro ----
+    // Barra di scala (basso-centro)
     var scaleTarget = document.getElementById("scale-container");
     if (scaleTarget) {
       map.addControl(new ol.control.ScaleLine({ target: scaleTarget }));
     }
 
-    // ---- Coordinate in alto-centro ----
+    // Coordinate (alto-centro)
     var coordsEl = document.getElementById("coords-container");
     if (coordsEl) {
       map.on("pointermove", function (evt) {
@@ -76,23 +104,21 @@
       });
     }
 
-    // ---- Reset sotto ai pulsanti di zoom ----
+    // Reset sotto zoom
     var resetWrap = document.querySelector("#map .reset-control");
     var resetBtn  = document.getElementById("reset-view");
     if (resetBtn) {
       resetBtn.addEventListener("click", function () {
         map.getView().animate({
-          center: ol.proj.fromLonLat([parseFloat(centerLonLat[0]), parseFloat(centerLonLat[1])]),
+          center: ol.proj.fromLonLat([centerLonLat[0], centerLonLat[1]]),
           zoom: zoomVal,
           duration: 220
         });
       });
     }
 
-    // Allinea il contenitore del reset subito sotto lo Zoom, con 8px di margine
     function alignResetUnderZoom() {
       if (!resetWrap) return;
-      // trova il controllo Zoom
       var zoomCtrl = null;
       map.getControls().forEach(function (c) {
         if (c instanceof ol.control.Zoom) zoomCtrl = c;
@@ -102,29 +128,25 @@
       var mapRect  = map.getTargetElement().getBoundingClientRect();
       var zoomRect = zoomCtrl.element.getBoundingClientRect();
 
-      var top  = (zoomRect.bottom - mapRect.top) + 8;  // 8px di gap
+      var top  = (zoomRect.bottom - mapRect.top) + 8;
       var left = (zoomRect.left   - mapRect.left);
 
       resetWrap.style.top  = top + "px";
       resetWrap.style.left = left + "px";
     }
-
-    // Applica dopo il primo render e su resize
     map.once("postrender", alignResetUnderZoom);
-    // OL ricalcola dimensioni anche dopo updateSize; agganciamoci agli eventi comuni
     window.addEventListener("resize", alignResetUnderZoom);
-    // piccolo ritardo per sicurezza su mount
     setTimeout(alignResetUnderZoom, 0);
 
-    // ---- Basemap select (alto-dx) ----
+    // Basemap select
     var selectEl = document.getElementById("basemap-select");
     if (selectEl) {
-      // Popola l'elenco con i titoli dei basemap
       selectEl.innerHTML = "";
       layers.forEach(function (lyr, idx) {
         var opt = document.createElement("option");
-        opt.value = lyr.get("title") || ("Basemap " + (idx + 1));
-        opt.textContent = opt.value;
+        var title = lyr.get("title") || ("Basemap " + (idx + 1));
+        opt.value = title;
+        opt.textContent = title;
         if (lyr.getVisible()) opt.selected = true;
         selectEl.appendChild(opt);
       });
@@ -137,7 +159,7 @@
       });
     }
 
-    // Garantisco che almeno un basemap sia visibile
+    // safety: almeno un basemap visibile
     var anyVisible = layers.some(function (l) { return l.getVisible(); });
     if (!anyVisible && layers.length > 0) layers[0].setVisible(true);
 
@@ -145,6 +167,5 @@
     return map;
   }
 
-  // Esporta in global
   window.WebMapCore = { createMap: createMap };
 })();

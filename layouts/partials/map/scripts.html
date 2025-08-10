@@ -1,5 +1,76 @@
+{{/* Esporta tutte le config presenti in data/maps come oggetto JS,
+     poi scegli quella giusta in base allo slug/candidati della pagina. */}}
+
+<!-- OpenLayers JS (globale: window.ol) -->
+<script src="https://cdn.jsdelivr.net/npm/ol/dist/ol.js"></script>
+
+<script>
+  // 1) Esporta tutte le config YAML disponibili
+  window.__DATA_MAPS__ = {
+  {{- $first := true -}}
+  {{- range $k, $v := site.Data.maps -}}
+    {{- if not $first }},{{ end -}}
+    {{ $first = false -}}
+    {{ $k | jsonify }}: {{ $v | jsonify }}
+  {{- end -}}
+  };
+
+  // 2) Candidati per lo slug della pagina corrente
+  (function() {
+    try {
+      var candidates = [];
+
+      // Valori iniettati da Hugo
+      var pSlug   = {{ with .Params.slug }}{{ . | jsonify }}{{ else }}null{{ end }};
+      var fTBase  = {{ with .File }}{{ .TranslationBaseName | jsonify }}{{ else }}null{{ end }};
+      var fBase   = {{ with .File }}{{ .BaseFileName | jsonify }}{{ else }}null{{ end }};
+      var sect    = {{ .Section | jsonify }};
+      var title   = {{ .Title | jsonify }};
+
+      if (pSlug)  candidates.push(pSlug);
+      if (fTBase) candidates.push(fTBase);
+      if (fBase)  candidates.push(fBase);
+
+      // Normalizzazioni tipiche
+      function urlize(s){ return (s||"").toString().trim().toLowerCase().replace(/\s+/g,'-'); }
+      candidates = candidates.concat(candidates.map(urlize));
+
+      // 3) Risolvi la config migliore
+      var dataMaps = window.__DATA_MAPS__ || {};
+      var picked = null, pickedKey = null;
+      for (var i=0; i<candidates.length; i++) {
+        var k = candidates[i];
+        if (k && dataMaps.hasOwnProperty(k)) { picked = dataMaps[k]; pickedKey = k; break; }
+      }
+
+      if (sect === "maps" && !picked && dataMaps.hasOwnProperty("test")) {
+        // fallback "amichevole" durante lo sviluppo
+        picked = dataMaps["test"]; pickedKey = "test";
+      }
+
+      if (!picked) {
+        console.warn("[scripts] Nessuna config trovata per", candidates, "— __MAP_CONFIG__ sarà {}");
+        window.__MAP_CONFIG__ = {};
+      } else {
+        console.log("[scripts] Config risolta:", pickedKey, picked);
+        window.__MAP_CONFIG__ = picked;
+      }
+
+      window.__MAP_TITLE__ = title;
+    } catch(e){
+      console.error("[scripts] Errore preparando __MAP_CONFIG__:", e);
+      window.__MAP_CONFIG__ = {};
+    }
+  })();
+</script>
+
+{{/* JS locali generici */}}
 {{ $core := resources.Get "js/map-core.js" }}
 {{ $init := resources.Get "js/map-init.js" }}
-
 <script src="{{ $core.RelPermalink }}?v={{ now.Unix }}"></script>
 <script src="{{ $init.RelPermalink }}?v={{ now.Unix }}"></script>
+
+{{/* JS specifici della pagina (se presenti nel bundle della mappa) */}}
+{{ with .Resources.GetMatch "map*.js" }}
+  <script src="{{ .RelPermalink }}?v={{ now.Unix }}"></script>
+{{ end }}
