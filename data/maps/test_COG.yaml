@@ -6,3 +6,10 @@ basemaps:
   - type: osm
     title: "OpenStreetMap"
     visible: true
+
+layers:
+  - title: "COG RGB Campania 2015"
+    type: cog
+    url: "https://geodata-maxdragonheart.s3.eu-north-1.amazonaws.com/incendio-vesuvio/COG_RGB_Campania_20150807.tif"
+    visible: true
+    zoom_to_extent: true

@@ -6,8 +6,9 @@
   <link rel="icon" href="https://massimilianomoraca.me/static/images/logo.webp" type="image/webp">
   <title>{{ .Title }} · {{ site.Title }}</title>
 
-  <!-- OpenLayers CSS -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ol/ol.css">
+  <!-- OpenLayers CSS (locale) -->
+  {{ $olcss := resources.Get "css/lib/ol.css" }}
+  <link rel="stylesheet" href="{{ $olcss.RelPermalink }}">
 
   <!-- CSS progetto (solo quelli effettivamente usati) -->
   {{ $olcustom := resources.Get "css/ol_custom.css" }}
@@ -18,8 +19,13 @@
 <body>
   {{ block "main" . }}{{ end }}
 
-  <!-- OpenLayers JS (globale: window.ol) — una sola volta -->
-  <script src="https://cdn.jsdelivr.net/npm/ol/dist/ol.js"></script>
+  <!-- OpenLayers JS (locale, globale: window.ol) -->
+  {{ $oljs := resources.Get "js/lib/ol.js" }}
+  <script src="{{ $oljs.RelPermalink }}"></script>
+
+  <!-- GeoTIFF JS (locale) -->
+  {{ $geotiff := resources.Get "js/lib/geotiff.min.js" }}
+  <script src="{{ $geotiff.RelPermalink }}"></script>
 
   <!-- Script locali -->
   {{ partial "map/scripts.html" . }}

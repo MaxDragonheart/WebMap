@@ -1,5 +1,4 @@
 // Usa la build globale di OpenLayers (window.ol) — niente import
-
 (function () {
   function getConfig() {
     var raw = (typeof window !== "undefined") ? window.__MAP_CONFIG__ : {};
@@ -48,6 +47,47 @@
     return layers;
   }
 
+  function buildOtherLayers(cfg, map) {
+    var layers = [];
+    var list = Array.isArray(cfg.layers) ? cfg.layers : [];
+
+    for (var i = 0; i < list.length; i++) {
+      var ly = list[i];
+      var layer = null;
+
+      // --- COG layer ---
+      if (ly.type === "cog" && ly.url) {
+        layer = new ol.layer.Tile({
+          title: ly.title || "COG Layer",
+          source: new ol.source.GeoTIFF({
+            sources: [{ url: ly.url }]
+          }),
+          visible: !!ly.visible
+        });
+
+        // Zoom automatico all'estensione del COG
+        if (ly.zoom_to_extent) {
+          layer.getSource().on("change", function () {
+            if (layer.getSource().getState() === "ready") {
+              try {
+                var extent = layer.getSource().getTileGrid().getExtent();
+                if (extent) {
+                  map.getView().fit(extent, { duration: 800 });
+                }
+              } catch (e) {
+                console.error("Errore fit extent COG:", e);
+              }
+            }
+          });
+        }
+      }
+
+      if (layer) layers.push(layer);
+    }
+
+    return layers;
+  }
+
   function parseCenter(cfg) {
     var def = [12.4964, 41.9028]; // Roma fallback
     if (!cfg.view || !Array.isArray(cfg.view.center)) return def;
@@ -75,17 +115,20 @@
       zoom: zoomVal
     });
 
-    var layers = buildBasemaps(cfg);
-
+    var basemaps = buildBasemaps(cfg);
     var map = new ol.Map({
       target: targetId,
-      layers: layers,
+      layers: basemaps,
       view: view,
       controls: [
         new ol.control.Zoom(),
         new ol.control.Attribution({ collapsible: true })
       ]
     });
+
+    // Aggiungi eventuali altri layer (COG, ecc.)
+    var extraLayers = buildOtherLayers(cfg, map);
+    extraLayers.forEach(function (l) { map.addLayer(l); });
 
     // Barra di scala (basso-centro)
     var scaleTarget = document.getElementById("scale-container");
@@ -142,7 +185,7 @@
     var selectEl = document.getElementById("basemap-select");
     if (selectEl) {
       selectEl.innerHTML = "";
-      layers.forEach(function (lyr, idx) {
+      basemaps.forEach(function (lyr, idx) {
         var opt = document.createElement("option");
         var title = lyr.get("title") || ("Basemap " + (idx + 1));
         opt.value = title;
@@ -153,15 +196,15 @@
 
       selectEl.addEventListener("change", function () {
         var val = selectEl.value;
-        layers.forEach(function (lyr) { lyr.setVisible(false); });
-        var hit = layers.find(function (lyr) { return (lyr.get("title") || "") === val; });
+        basemaps.forEach(function (lyr) { lyr.setVisible(false); });
+        var hit = basemaps.find(function (lyr) { return (lyr.get("title") || "") === val; });
         if (hit) hit.setVisible(true);
       });
     }
 
     // safety: almeno un basemap visibile
-    var anyVisible = layers.some(function (l) { return l.getVisible(); });
-    if (!anyVisible && layers.length > 0) layers[0].setVisible(true);
+    var anyVisible = basemaps.some(function (l) { return l.getVisible(); });
+    if (!anyVisible && basemaps.length > 0) basemaps[0].setVisible(true);
 
     setTimeout(function () { map.updateSize(); }, 0);
     return map;
