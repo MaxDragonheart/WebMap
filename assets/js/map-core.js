@@ -8,6 +8,45 @@
     return raw || {};
   }
 
+  // ---------- UI helper: banner avvisi non-bloccante ----------
+  function showMapWarning(msg) {
+    try {
+      var host = document.getElementById("map-warnings");
+      if (!host) {
+        host = document.createElement("div");
+        host.id = "map-warnings";
+        host.style.position = "fixed";
+        host.style.top = "12px";
+        host.style.left = "50%";
+        host.style.transform = "translateX(-50%)";
+        host.style.zIndex = "9999";
+        host.style.pointerEvents = "none";
+        document.body.appendChild(host);
+      }
+      var box = document.createElement("div");
+      box.textContent = msg;
+      box.style.pointerEvents = "auto";
+      box.style.margin = "6px 0";
+      box.style.padding = "8px 12px";
+      box.style.background = "rgba(220, 53, 69, 0.95)";   // rosso bootstrap-like
+      box.style.color = "#fff";
+      box.style.borderRadius = "4px";
+      box.style.boxShadow = "0 4px 12px rgba(0,0,0,0.25)";
+      host.appendChild(box);
+      setTimeout(function(){ if (box.parentNode) box.parentNode.removeChild(box); }, 6000);
+    } catch(e) {
+      console.warn("[core] Impossibile mostrare banner:", e);
+    }
+  }
+
+  // ---------- Verifica URL (HEAD) prima di creare il layer ----------
+  function checkUrlReachable(url) {
+    // HEAD evita di scaricare il file; S3 deve permettere HEAD in CORS
+    return fetch(url, { method: "HEAD", cache: "no-store", mode: "cors" })
+      .then(function (res) { return res.ok; })
+      .catch(function () { return false; });
+  }
+
   // ---------------- Basemaps ----------------
   function buildBasemaps(cfg) {
     var layers = [];
@@ -68,7 +107,6 @@
   }
 
   function rgbFromRawBands(bands) {
-    // usa valori già 0..1 (adatto quando source.normalize = true)
     var b1 = (bands && bands[0]) || 1;
     var b2 = (bands && bands[1]) || 2;
     var b3 = (bands && bands[2]) || 3;
@@ -76,7 +114,6 @@
   }
 
   function rgbFromMinMax(bands, minArr, maxArr) {
-    // normalizza nello stile secondo i range forniti (source.normalize deve essere false/assente)
     var b1 = (bands && bands[0]) || 1;
     var b2 = (bands && bands[1]) || 2;
     var b3 = (bands && bands[2]) || 3;
@@ -101,39 +138,29 @@
   }
 
   function buildGeoTiffOptionsFromYaml(ly) {
-    // Opzioni sobrie
     var opts = {
       sources: [{ url: ly.url }],
       interpolate: false,
       wrapX: false
     };
-
-    // normalize: se definito lo rispettiamo, altrimenti NON forziamo nulla (evitiamo doppie scale)
     if (typeof ly.normalize === "boolean") {
       opts.normalize = ly.normalize;
     }
-
     if (Array.isArray(ly.bands) && ly.bands.length > 0) {
       opts.bands = ly.bands;
     }
-
-    // convertToRGB lo lasciamo libero (lo gestisce lo stile)
     if (typeof ly.convertToRGB === "boolean") {
       opts.convertToRGB = ly.convertToRGB;
     }
-
-    // min/max: le useremo nello stile, qui le riportiamo solo per diagnosi
     if (Array.isArray(ly.min) && Array.isArray(ly.max)) {
       opts.min = ly.min;
       opts.max = ly.max;
     }
-
     if (ly.nodata != null) opts.nodata = ly.nodata;
-
     return opts;
   }
 
-  function attachCogDiagnostics(src) {
+  function attachCogDiagnostics(src, layerTitle, onHardError) {
     src.on("change", function () {
       if (src.getState() === "ready") {
         try {
@@ -144,91 +171,116 @@
         } catch (e) {
           console.warn("[core] Diagnostica COG non disponibile:", e);
         }
+      } else if (src.getState() === "error") {
+        console.error("[core] GeoTIFF source in stato ERROR per:", layerTitle);
+        showMapWarning("Errore caricando “" + (layerTitle || "COG") + "”. Controlla l’URL o i permessi.");
+        if (typeof onHardError === "function") onHardError();
+        // TODO: estendere anche ad altri layer (GeoJSON, WMS, ecc.)
       }
-    });
-    src.on("error", function (e) {
-      console.error("[core] GeoTIFF source error:", e);
     });
   }
 
   // --------------- Altri layer (COG, ecc.) ----------------
   function buildOtherLayers(cfg, map) {
-    var layers = [];
+    // NOTA: i COG vengono aggiunti in modo asincrono dopo il controllo HEAD
+    var out = [];
     var list = Array.isArray(cfg.layers) ? cfg.layers : [];
 
-    for (var i = 0; i < list.length; i++) {
-      var ly = list[i];
-      var layer = null;
-
+    list.forEach(function (ly) {
       if (ly.type === "cog" && ly.url) {
-        console.log("[core] Caricamento COG:", ly.url);
+        // Controllo preventivo URL
+        checkUrlReachable(ly.url).then(function (ok) {
+          if (!ok) {
+            console.error("[core] URL non raggiungibile (HEAD fallita):", ly.url);
+            showMapWarning("Impossibile caricare “" + (ly.title || "COG") + "”: URL non raggiungibile (404/403?).");
+            // alert("Impossibile caricare il layer “" + (ly.title || "COG") + "”. Verifica l’URL.");
+            return;
+          }
 
-        var opts = buildGeoTiffOptionsFromYaml(ly);
-        console.log("[core] Opzioni GeoTIFF:", opts);
-        var src = new ol.source.GeoTIFF(opts);
-        attachCogDiagnostics(src);
+          console.log("[core] Caricamento COG:", ly.url);
+          var opts = buildGeoTiffOptionsFromYaml(ly);
+          console.log("[core] Opzioni GeoTIFF (passo 1):", opts);
 
-        // bands di riferimento per lo stile
-        var bands = Array.isArray(ly.bands) && ly.bands.length >= 3 ? ly.bands : [1, 2, 3];
-        var minArr = Array.isArray(ly.min) ? ly.min : null;
-        var maxArr = Array.isArray(ly.max) ? ly.max : null;
+          var src = new ol.source.GeoTIFF(opts);
 
-        // Strategia:
-        // - se normalize:true -> i dati sono già 0..1 -> usa RAW RGB (niente min/max nello stile)
-        // - altrimenti, se hai min/max coerenti -> normalizza nello stile
-        // - altrimenti fallback in grayscale
-        var colorExpr;
-        if (opts.normalize === true) {
-          colorExpr = rgbFromRawBands(bands);
-        } else if (minArr && maxArr && minArr.length >= 3 && maxArr.length >= 3) {
-          colorExpr = rgbFromMinMax(bands, minArr, maxArr);
-        } else {
-          colorExpr = grayscaleFallback(bands[0]);
-        }
+          var layer = new ol.layer.WebGLTile({
+            title: ly.title || "COG Layer",
+            source: src,
+            visible: !!ly.visible,
+            zIndex: (typeof ly.zIndex === "number") ? ly.zIndex : 100,
+            // Stile: se normalize:true i band sono già 0..1 -> RGB diretto; altrimenti min/max o grayscale
+            style: {
+              color: (function () {
+                var bands = Array.isArray(ly.bands) && ly.bands.length >= 3 ? ly.bands : [1, 2, 3];
+                if (opts.normalize === true) {
+                  return ['array', ['band', bands[0]], ['band', bands[1]], ['band', bands[2]], 1];
+                }
+                if (Array.isArray(ly.min) && Array.isArray(ly.max) && ly.min.length >= 3 && ly.max.length >= 3) {
+                  return [
+                    'array',
+                    ['clamp', ['/', ['-', ['band', bands[0]], ly.min[0]], Math.max(1e-9, (ly.max[0] - ly.min[0]))], 0, 1],
+                    ['clamp', ['/', ['-', ['band', bands[1]], ly.min[1]], Math.max(1e-9, (ly.max[1] - ly.min[1]))], 0, 1],
+                    ['clamp', ['/', ['-', ['band', bands[2]], ly.min[2]], Math.max(1e-9, (ly.max[2] - ly.min[2]))], 0, 1],
+                    1
+                  ];
+                }
+                // Fallback in scala di grigi
+                return [
+                  'array',
+                  ['clamp', ['/', ['band', bands[0]], 255], 0, 1],
+                  ['clamp', ['/', ['band', bands[0]], 255], 0, 1],
+                  ['clamp', ['/', ['band', bands[0]], 255], 0, 1],
+                  1
+                ];
+              })()
+            }
+          });
 
-        layer = new ol.layer.WebGLTile({
-          title: ly.title || "COG Layer",
-          source: src,
-          visible: !!ly.visible,
-          zIndex: (typeof ly.zIndex === "number") ? ly.zIndex : 100,
-          style: { color: colorExpr }
-        });
+          // Se dopo la creazione la sorgente va in errore, rimuovi il layer e avvisa
+          attachCogDiagnostics(src, ly.title, function () {
+            try { map.removeLayer(layer); } catch (_) {}
+          });
 
-        // Fit all’estensione reale, trasformando dalla proiezione del COG a quella della view
-        if (ly.zoom_to_extent) {
-          var doFit = function (srcForFit) {
-            if (srcForFit.getState() !== "ready") return;
+          map.addLayer(layer);
 
-            try {
-              var srcProj = srcForFit.getProjection() || 'EPSG:3857';
-              var tg = srcForFit.getTileGrid();
-              var srcExtent = tg ? tg.getExtent() : null;
-              if (srcExtent) {
-                var dstProj = map.getView().getProjection();
-                var fitExtent = ol.proj.transformExtent(srcExtent, srcProj, dstProj);
-                map.getView().fit(fitExtent, { duration: 800, padding: [40, 40, 40, 40] });
-                console.log("[core] COG extent (src):", srcExtent, "srcProj:", srcProj);
-                console.log("[core] COG extent (dst):", fitExtent, "dstProj:", dstProj.getCode());
+          // Fit all’estensione quando pronto
+          if (ly.zoom_to_extent) {
+            var doFit = function () {
+              if (src.getState() !== "ready") return;
+              try {
+                var srcProj = src.getProjection() || 'EPSG:3857';
+                var tg = src.getTileGrid();
+                var srcExtent = tg ? tg.getExtent() : null;
+                if (srcExtent) {
+                  var dstProj = map.getView().getProjection();
+                  var fitExtent = ol.proj.transformExtent(srcExtent, srcProj, dstProj);
+                  map.getView().fit(fitExtent, { duration: 800, padding: [40, 40, 40, 40] });
+                  console.log("[core] COG extent (src):", srcExtent, "srcProj:", srcProj);
+                  console.log("[core] COG extent (dst):", fitExtent, "dstProj:", dstProj.getCode());
+                }
+              } catch (e) {
+                console.error("[core] Errore nel fit extent COG:", e);
               }
-            } catch (e) {
-              console.error("[core] Errore nel fit extent COG:", e);
-            }
-          };
-
-          var onChange1 = function () {
-            if (src.getState() === "ready") {
-              src.un("change", onChange1);
-              doFit(src);
-            }
-          };
-          src.on("change", onChange1);
-        }
+            };
+            var onChange1 = function () {
+              if (src.getState() === "ready") {
+                src.un("change", onChange1);
+                doFit();
+              }
+            };
+            src.on("change", onChange1);
+          }
+        });
       }
 
-      if (layer) layers.push(layer);
-    }
+      // TODO: qui in futuro gestire altri tipi di layer (GeoJSON, WMS, WMTS, VectorTile...)
+      // E in caso di errore su queste sorgenti, riutilizzare la stessa strategia:
+      // - HEAD/GET di verifica (se applicabile)
+      // - ascolto state/error della source
+      // - showMapWarning + rimozione layer
+    });
 
-    return layers;
+    return out; // i COG vengono aggiunti async direttamente alla mappa
   }
 
   // ---------------- View helpers ----------------
@@ -271,14 +323,16 @@
       ]
     });
 
-    var extraLayers = buildOtherLayers(cfg, map);
-    extraLayers.forEach(function (l) { map.addLayer(l); });
+    // COG e futuri layer vengono aggiunti async
+    buildOtherLayers(cfg, map);
 
+    // Scale bar
     var scaleTarget = document.getElementById("scale-container");
     if (scaleTarget) {
       map.addControl(new ol.control.ScaleLine({ target: scaleTarget }));
     }
 
+    // Coordinate
     var coordsEl = document.getElementById("coords-container");
     if (coordsEl) {
       map.on("pointermove", function (evt) {
@@ -289,6 +343,7 @@
       });
     }
 
+    // Reset
     var resetWrap = document.querySelector("#map .reset-control");
     var resetBtn = document.getElementById("reset-view");
     if (resetBtn) {
@@ -321,6 +376,7 @@
     window.addEventListener("resize", alignResetUnderZoom);
     setTimeout(alignResetUnderZoom, 0);
 
+    // Basemap select
     var selectEl = document.getElementById("basemap-select");
     if (selectEl) {
       selectEl.innerHTML = "";
@@ -341,6 +397,7 @@
       });
     }
 
+    // safety: almeno un basemap visibile
     var anyVisible = basemaps.some(function (l) { return l.getVisible(); });
     if (!anyVisible && basemaps.length > 0) basemaps[0].setVisible(true);
 
