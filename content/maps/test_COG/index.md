@@ -15,7 +15,7 @@ draft: false
   /* Posizionamento overlay dello slider (solo per questa pagina) */
   #cog-swipe-wrapper{
     position:absolute;
-    z-index:5;
+    z-index: 9999 !important;
     top:0.5em;
     left:50%;
     transform:translateX(-50%);

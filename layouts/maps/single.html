@@ -2,6 +2,11 @@
 <!-- Contenitore mappa full-page -->
 <div id="map" class="map-container">
 
+  <!-- Slider swipe COG (inizialmente invisibile, lo script lo muove) -->
+  <div id="cog-swipe-wrapper" style="position:absolute; top:10px; left:50%; transform:translateX(-50%); z-index:1000;">
+    <input type="range" id="cog-swipe" min="0" max="100" value="50" style="width:300px;" />
+  </div>
+
   <!-- Reset sotto ai pulsanti zoom -->
   <div class="ol-control reset-control">
     <button id="reset-view" type="button" title="Reset view">↺</button>
@@ -19,11 +24,20 @@
   <div id="scale-container" class="ol-control scale-bar-container"></div>
 </div>
 
-<!-- Passo la config dal data -->
-{{ $basename := .File.TranslationBaseName | default .File.BaseFileName }}
-{{ $cfg := or (index site.Data.maps $basename) (index site.Data.maps (printf "%s-map" $basename)) (index site.Data.maps (printf "%s_map" $basename)) }}
+{{/* ---- Risoluzione config ---- */}}
+{{- $base := "" -}}
+{{- with .File -}}
+  {{- $base = .TranslationBaseName | default .BaseFileName -}}
+{{- end -}}
+
+{{- $cfg := or
+  (index site.Data.maps $base)
+  (index site.Data.maps (printf "%s-map" $base))
+  (index site.Data.maps (printf "%s_map" $base))
+-}}
+
 <script>
-  window.__MAP_CONFIG__ = {{ $cfg | jsonify }};
+  window.__MAP_CONFIG__ = {{ $cfg | default (dict) | jsonify }};
   window.__MAP_TITLE__  = {{ .Title | jsonify }};
 </script>
 {{ end }}
