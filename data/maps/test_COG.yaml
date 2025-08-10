@@ -18,3 +18,12 @@ layers:
                       # evitando che l'immagine appaia nera quando i dati sono in 0–255 o float
     min: [0, 0, 0]
     max: [255, 255, 255]
+
+  - title: "COG RGB Campania 2022"
+    type: cog
+    url: "https://geodata-maxdragonheart.s3.eu-north-1.amazonaws.com/incendio-vesuvio/COG_RGB_Campania_20220711.tif"
+    visible: false
+    bands: [1, 2, 3]
+    normalize: true
+    min: [0, 0, 0]
+    max: [255, 255, 255]
