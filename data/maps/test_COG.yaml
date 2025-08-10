@@ -10,8 +10,11 @@ basemaps:
 layers:
   - title: "COG RGB Campania 2015"
     type: cog
-    url: "https://geodata-maxdragonheart.s3.eu-north-1.amazonaws.com/incendio-vesuvio/COG_RGB_Campania_20150807_uint8.tif"
+    url: "https://geodata-maxdragonheart.s3.eu-north-1.amazonaws.com/incendio-vesuvio/COG_RGB_Campania_20150807.tif"
     visible: true
     zoom_to_extent: true
-    normalize: true        # OpenLayers porta le bande in 0..1
-    bands: [1, 2, 3]       # RGB
+    bands: [1, 2, 3]
+    normalize: true   # Necessario per scalare automaticamente i valori pixel al range 0–1,
+                      # evitando che l'immagine appaia nera quando i dati sono in 0–255 o float
+    min: [0, 0, 0]
+    max: [255, 255, 255]
